@@ -275,18 +275,16 @@ select, .card, .polaroid, .sticky, .wallObj { cursor: none; }
 .detail-banner img{ width: 100%;margin-bottom: 4rem;} 
 
 
-.back{ text-align: center; padding-top: 3rem;}
-.back a{ font-size: var(--fsS);font-weight: 300; color: var(--pri04);  transition: .3s; position: relative;  display: inline-block;}
-.back a:hover{ color: #000;}
 
 /* Prev / Next links on detail pages */
 .project-detail-wrapper{ position: relative; }
 .project-nav { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid #eceff1; }
 .project-nav a { font-size: var(--fsL); color: #37474f; display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem; border-radius: 50%; transition: all .2s ease; }
-.project-nav a:hover { color: #111111; background: #f6f8fa; }
+.project-nav a.UI::before { font-family: 'Material Icons Outlined' !important; }
 .project-nav a.prev { transform: scaleX(-1); }
 .project-nav a.next { }
-.project-nav a.back-btn{font-size: var(--fsP);}
+.project-nav a.back { font-size: var(--fsS);font-weight: 300; color: var(--pri04); transition: .3s; position: relative;  display: inline-block;}
+.project-nav a.back:hover{ color: #000;}
 
 /* 1. 基礎容器設定（讓內容置中，限制最大寬度，看久了眼睛才不累） */
 .preview-container, .project-detail-wrapper { margin: 0 auto; line-height: 1.7; text-align: left; width: 100%; box-sizing: border-box; }
