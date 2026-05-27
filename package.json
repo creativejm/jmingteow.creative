@@ -5,6 +5,7 @@
   "scripts": {
     "cms":  "node start-cms.js",
     "sync": "node sync.js",
+    "build": "node sync.js --once",
     "start": "node start-cms.js"
   },
   "devDependencies": {
