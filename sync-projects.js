@@ -23,10 +23,10 @@ function detailTemplate(id) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, min-width=640, user-scalable=0, viewport-fit=cover"/>
-  <title>Project — JM PORTFOLIO</title>
+  <title>Project — Jming Studio</title>
   <meta name="description" content="Project detail" />
   <meta name="robots" content="all" />
-  <meta property="og:site_name" content="JM PORTFOLIO" />
+  <meta property="og:site_name" content="Jming Studio" />
   <meta property="og:type" content="website" />
 
   <link rel="stylesheet" href="../../css/default.css" />

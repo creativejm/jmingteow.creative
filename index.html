@@ -13,15 +13,15 @@
 
 <!-- SEO -->
 <title>JM Designer</title>
-<meta name="Description" content="2026 JM Studio"/>
+<meta name="Description" content="Jming Studio"/>
 <meta name="robots" content="all" />
 <meta name="author" content="Design by JM" />
 
 <!-- Open Graph protocol -->
-<meta property="og:site_name" content="JM PORTFOLIO" />
-<meta property="og:url" content="https://creative-jm.github.io/" />
+<meta property="og:site_name" content="Jming Studio" />
+<meta property="og:url" content="https://creativejm.github.io/" />
 <meta property="og:type" content="website" />
-<meta property="og:description" content="2026 JM Studio"/>
+<meta property="og:description" content="Jming Studio"/>
 <meta property="og:image" content="Images/fbbanner.jpg" />
 <!-- Google Analytics -->
 
@@ -722,10 +722,12 @@ $(document).ready(function() {
                 <div class="container">
                     <div class="pageTitle">
                         <h2 class="title">Featured Projects</h2>
-                        <p class="subtitle">A showcase of recent projects built with passion and precision.</p>
+                        <p class="subtitle">A showcase of recent projects built with<br class="mobile"> passion and precision.</p>
                     </div>
-                    <div class="grid" id="homepage-projects-grid">
-                        <!-- Dynamic projects will be inserted here -->
+                    <div class="grid-wrap">
+                        <div class="grid" id="homepage-projects-grid">
+                            <!-- Dynamic projects will be inserted here -->
+                        </div>
                     </div>
                     <div class="btnBox">
                         <a href="projects/index.html" class="btn primary">View All</a>
@@ -734,111 +736,215 @@ $(document).ready(function() {
             </div>
 
             <script>
-            $(function() {
-                // 根目錄首頁作品動態加載
-                $.getJSON('data/projects.json?_t=' + new Date().getTime(), function (data) {
-                    var projectsList = data.projects || [];
-                    if (projectsList.length === 0) return;
+            // homepage-projects-config.js (inlined)
+            window.homepageProjectsConfig = window.homepageProjectsConfig || {
+                autoScrollSpeed: 0.6,      // pixels per tick — increase for faster scroll
+                tickMs: 16,                // ms per tick (16 ≈ 60fps)
+                pauseAfterInteraction: 3000,// ms to pause after user interaction
+                edgeFadeWidth: '6rem'      // CSS unit for left/right soft edge width
+            };
 
-                    var loadedProjects = [];
-                    var loadedCount = 0;
+            // homepage-projects.js (inlined)
+            (function () {
+                var cfg = window.homepageProjectsConfig = window.homepageProjectsConfig || {
+                    autoScrollSpeed: 0.6, // pixels per tick (adjustable)
+                    tickMs: 16, // ms per tick (~60fps)
+                    pauseAfterInteraction: 3000 // ms to pause after user interaction
+                };
 
-                    projectsList.forEach(function (p) {
-                        if (!p.id || !p.folder) {
-                            checkComplete();
-                            return;
-                        }
+                $(function() {
+                    // 根目錄首頁作品動態加載
+                    $.getJSON('data/projects.json?_t=' + new Date().getTime(), function (data) {
+                        var projectsList = data.projects || [];
+                        if (projectsList.length === 0) return;
 
-                        // 1. 優先嘗試讀取根目錄下的 flat JSON
-                        var mainUrl = 'data/projects/' + p.id + '.json?_t=' + new Date().getTime();
-                        $.getJSON(mainUrl, function (project) {
-                            if (project.featured === true) {
-                                loadedProjects.push({ id: p.id, folder: p.folder, data: project });
+                        var loadedProjects = [];
+                        var loadedCount = 0;
+
+                        projectsList.forEach(function (p) {
+                            if (!p.id || !p.folder) {
+                                checkComplete();
+                                return;
                             }
-                            checkComplete();
-                        }).fail(function () {
-                            // 2. 備用方案：嘗試舊版的子資料夾路徑
-                            var fallbackUrl = 'data/projects/' + p.folder + '/' + p.id + '.json?_t=' + new Date().getTime();
-                            $.getJSON(fallbackUrl, function (project) {
+
+                            var mainUrl = 'data/projects/' + p.id + '.json?_t=' + new Date().getTime();
+                            $.getJSON(mainUrl, function (project) {
                                 if (project.featured === true) {
                                     loadedProjects.push({ id: p.id, folder: p.folder, data: project });
                                 }
                                 checkComplete();
-                            }).fail(function() {
-                                checkComplete();
+                            }).fail(function () {
+                                var fallbackUrl = 'data/projects/' + p.folder + '/' + p.id + '.json?_t=' + new Date().getTime();
+                                $.getJSON(fallbackUrl, function (project) {
+                                    if (project.featured === true) {
+                                        loadedProjects.push({ id: p.id, folder: p.folder, data: project });
+                                    }
+                                    checkComplete();
+                                }).fail(function() {
+                                    checkComplete();
+                                });
                             });
                         });
-                    });
 
-                    function checkComplete() {
-                        loadedCount++;
-                        if (loadedCount >= projectsList.length) {
-                            // 所有作品載入完畢，依 order 排序（由小到大）
-                            loadedProjects.sort(function(a, b) {
-                                var orderA = a.data.order !== undefined ? parseInt(a.data.order) : 99;
-                                var orderB = b.data.order !== undefined ? parseInt(b.data.order) : 99;
-                                return orderA - orderB;
-                            });
+                        function checkComplete() {
+                            loadedCount++;
+                            if (loadedCount >= projectsList.length) {
+                                loadedProjects.sort(function(a, b) {
+                                    var orderA = a.data.order !== undefined ? parseInt(a.data.order) : 99;
+                                    var orderB = b.data.order !== undefined ? parseInt(b.data.order) : 99;
+                                    return orderA - orderB;
+                                });
 
-                            // 限制首頁展示的作品數量在 10 個左右
-                            var displayProjects = loadedProjects.slice(0, 10);
+                                var displayProjects = loadedProjects.slice(0, 10);
 
-                            // 渲染至首頁作品列表
-                            displayProjects.forEach(function (p) {
-                                renderHomepageCard(p.id, p.data, p.folder);
-                            });
+                                displayProjects.forEach(function (p) {
+                                    renderHomepageCard(p.id, p.data, p.folder);
+                                });
 
-                            // 綁定滑鼠滾輪橫向滾動控制
-                            var grid = $('#homepage-projects-grid');
-                            grid.on('wheel', function(e) {
-                                var rawEvent = e.originalEvent;
-                                var delta = rawEvent.deltaY;
-                                
-                                var scrollLeft = grid.scrollLeft();
-                                var maxScrollLeft = grid[0].scrollWidth - grid[0].clientWidth;
-                                
-                                var canScrollLeft = scrollLeft > 0;
-                                var canScrollRight = scrollLeft < maxScrollLeft;
-                                
-                                // 當還能向右滾動且滑鼠向下滾，或是還能向左滾動且滑鼠向上滾時，攔截預設的垂直滾動並進行水平滾動
-                                if ((delta > 0 && canScrollRight) || (delta < 0 && canScrollLeft)) {
-                                    rawEvent.preventDefault();
-                                    grid.scrollLeft(scrollLeft + delta);
+                                // 綁定滑鼠滾輪橫向滾動控制
+                                var grid = $('#homepage-projects-grid');
+                                // Apply configurable edge fade width if provided
+                                var wrapEl = document.querySelector('.homepage-projects-section .grid-wrap');
+                                if (wrapEl && window.homepageProjectsConfig && window.homepageProjectsConfig.edgeFadeWidth) {
+                                    wrapEl.style.setProperty('--hp-edge-width', window.homepageProjectsConfig.edgeFadeWidth);
                                 }
-                            });
+
+                                // Set edge gradient colors based on section background color
+                                (function applyEdgeColorFromBackground() {
+                                    try {
+                                        var section = document.querySelector('.homepage-projects-section');
+                                        if (!section || !wrapEl) return;
+                                        var bg = getComputedStyle(section).backgroundColor || '';
+                                        var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([0-9.]+))?\)/);
+                                        if (m) {
+                                            var r = m[1], g = m[2], b = m[3];
+                                            var start = 'rgba(' + r + ',' + g + ',' + b + ',0.95)';
+                                            var end = 'rgba(' + r + ',' + g + ',' + b + ',0)';
+                                            wrapEl.style.setProperty('--hp-edge-start', start);
+                                            wrapEl.style.setProperty('--hp-edge-end', end);
+                                        }
+                                    } catch (e) {}
+                                })();
+
+                                // Duplicate children to create an infinite seamless loop
+                                var $items = grid.children().clone(true);
+                                grid.append($items);
+
+                                // Wheel handler: convert vertical wheel into horizontal scrolling when appropriate
+                                grid.on('wheel', function(e) {
+                                    var rawEvent = e.originalEvent;
+                                    var delta = rawEvent.deltaY;
+
+                                    var scrollLeft = grid.scrollLeft();
+                                    var maxScrollLeft = grid[0].scrollWidth - grid[0].clientWidth;
+
+                                    var canScrollLeft = scrollLeft > 0;
+                                    var canScrollRight = scrollLeft < maxScrollLeft;
+
+                                    if ((delta > 0 && canScrollRight) || (delta < 0 && canScrollLeft)) {
+                                        rawEvent.preventDefault();
+                                        grid.scrollLeft(scrollLeft + delta);
+                                    }
+                                });
+
+                                // keep scroll position normalized so loop stays seamless
+                                grid.on('scroll', function () {
+                                    var el = this; var half = el.scrollWidth / 2; if (half <= 0) return;
+                                    if (el.scrollLeft >= half) el.scrollLeft = el.scrollLeft - half;
+                                    else if (el.scrollLeft < 0) el.scrollLeft = el.scrollLeft + half;
+                                });
+
+                                // 自動滾動功能（無縫循環，尊重 prefers-reduced-motion）
+                                (function setupAutoScroll() {
+                                    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                                        return; // 不啟用自動滾動
+                                    }
+
+                                    var autoScrollSpeed = parseFloat(cfg.autoScrollSpeed) || 0.6;
+                                    var tickMs = parseInt(cfg.tickMs, 10) || 16;
+                                    var intervalId = null;
+                                    var pauseTimeout = null;
+                                    var pauseAfterInteraction = parseInt(cfg.pauseAfterInteraction, 10) || 3000;
+                                    var $g = grid;
+
+                                    function start() {
+                                        if (intervalId) return;
+                                        intervalId = setInterval(function () {
+                                            if (!$g || !$g.length) return;
+                                            var el = $g[0];
+                                            var half = el.scrollWidth / 2;
+                                            if (half <= 0) return;
+                                            var cur = $g.scrollLeft();
+                                            var next = cur + autoScrollSpeed;
+                                            if (next >= half) {
+                                                $g.scrollLeft(next - half);
+                                            } else {
+                                                $g.scrollLeft(next);
+                                            }
+                                        }, tickMs);
+                                    }
+
+                                    function stop() {
+                                        if (intervalId) { clearInterval(intervalId); intervalId = null; }
+                                    }
+
+                                    function pauseTemp() {
+                                        if (pauseTimeout) clearTimeout(pauseTimeout);
+                                        stop();
+                                        pauseTimeout = setTimeout(function () { start(); }, pauseAfterInteraction);
+                                    }
+
+                                    $g.on('wheel touchstart pointerdown mousedown', function () { pauseTemp(); });
+
+                                    $g.on('mouseenter', function () { stop(); }).on('mouseleave', function () {
+                                        if (pauseTimeout) clearTimeout(pauseTimeout);
+                                        pauseTimeout = setTimeout(start, 400);
+                                    });
+
+                                    document.addEventListener('visibilitychange', function () {
+                                        if (document.hidden) stop(); else start();
+                                    });
+
+                                    // start at a small offset to avoid sticky 0 position issues
+                                    if (grid && grid.length) grid.scrollLeft(0);
+                                    start();
+                                })();
+
+                            }
                         }
-                    }
 
-                    function renderHomepageCard(projectId, project, folderName) {
-                        var fixedCover = project.cover_image
-                            ? project.cover_image
-                                .replace(/^\.\.\/images\//i, 'Images/')
-                                .replace(/^images\//i, 'Images/')
-                            : '';
+                        function renderHomepageCard(projectId, project, folderName) {
+                            var fixedCover = project.cover_image
+                                ? project.cover_image
+                                        .replace(/^\.\.\/images\//i, 'Images/')
+                                        .replace(/^images\//i, 'Images/')
+                                : '';
 
-                        var rawCategory = project.category || folderName;
-                        var displayTag = rawCategory
-                            .split('-')
-                            .map(function (w) { return w.charAt(0).toUpperCase() + w.slice(1); })
-                            .join(' ');
+                            var rawCategory = project.category || folderName;
+                            var displayTag = rawCategory
+                                .split('-')
+                                .map(function (w) { return w.charAt(0).toUpperCase() + w.slice(1); })
+                                .join(' ');
 
-                        var cardHTML =
-                            '<div class="card" data-id="' + projectId + '">' +
-                                '<a href="projects/detail/' + projectId + '.html">' +
-                                    '<div class="thumb">' +
-                                        '<img src="' + fixedCover + '" alt="' + project.title + '" />' +
-                                    '</div>' +
-                                    '<div class="info">' +
-                                        '<h4 class="title">' + project.title + '</h4>' +
-                                        '<span class="tag">' + displayTag + '</span>' +
-                                    '</div>' +
-                                '</a>' +
-                            '</div>';
+                            var cardHTML =
+                                '<div class="card" data-id="' + projectId + '">' +
+                                    '<a href="projects/detail/' + projectId + '.html">' +
+                                        '<div class="thumb">' +
+                                            '<img src="' + fixedCover + '" alt="' + project.title + '" />' +
+                                        '</div>' +
+                                        '<div class="info">' +
+                                            '<h4 class="title">' + project.title + '</h4>' +
+                                            '<span class="tag">' + displayTag + '</span>' +
+                                        '</div>' +
+                                    '</a>' +
+                                '</div>';
 
-                        $('#homepage-projects-grid').append(cardHTML);
-                    }
+                            $('#homepage-projects-grid').append(cardHTML);
+                        }
+
+                    });
                 });
-            });
+            })();
             </script>
 
         <!-- Camera Flash Overlay -->

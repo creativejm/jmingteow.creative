@@ -1,4 +1,4 @@
-﻿$(function () {
+$(function () {
     // ── 1. 讀取作品 ID（三種方式，優先順序如下）──
     // 方式 A: 獨立頁面（projects/detail/jianyuan.html）設定的 PROJECT_ID 變數
     // 方式 B: URL hash（detail.html#jianyuan）
@@ -191,4 +191,50 @@
             }
         });
     }
+
+    // ── 增加 Previous / Next 連結功能，動態插入到 detail 頁底部 ──
+    function setupPrevNext(currentId) {
+        var listUrl = prefix + 'data/projects.json?_t=' + new Date().getTime();
+        $.getJSON(listUrl, function (data) {
+            var items = (data && data.projects) || [];
+            var ids = items.map(function (p) { return p.id; });
+            var idx = ids.indexOf(currentId);
+            if (idx === -1) return;
+
+            var prevId = idx > 0 ? ids[idx - 1] : null;
+            var nextId = idx < ids.length - 1 ? ids[idx + 1] : null;
+
+            var $wrapper = $('.project-detail-wrapper');
+            if (!$wrapper.length) return;
+
+            var $nav = $wrapper.find('.project-nav');
+            if (!$nav.length) {
+                $nav = $('<div/>', { 'class': 'project-nav' });
+                $wrapper.append($nav);
+            }
+            $nav.empty();
+
+            function detailHrefFor(id) {
+                var path = window.location.pathname || '';
+                if (path.indexOf('/projects/detail/') !== -1 || path.indexOf('\\projects\\detail\\') !== -1) {
+                    return id + '.html';
+                }
+                return prefix + 'projects/detail.html?id=' + encodeURIComponent(id);
+            }
+
+            if (prevId) {
+                $nav.append($('<a/>', { 'class': 'UI longnext prev', href: detailHrefFor(prevId) }));
+            }
+            
+            // 中間加入 Back 鏈接
+            $nav.append($('<a/>', { 'class': 'back-btn', href: 'javascript:history.back()', text: 'Back' }));
+            
+            if (nextId) {
+                $nav.append($('<a/>', { 'class': 'UI longnext', href: detailHrefFor(nextId) }));
+            }
+        });
+    }
+
+    // 在載入並呈現內容後設定 prev/next
+    setupPrevNext(projectId);
 });

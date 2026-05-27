@@ -100,7 +100,8 @@
     /* ----- Projects Page ----- */
     .bodybox.projects .subCategory h4.title{font-size:var(--fsP2);}
     .tag{font-size:var(--fsS);}
-    .pageTitle { text-align: center;padding: 1rem 0 4rem 0; }
+    .index .pageTitle { text-align: center;padding: 1rem 0 2rem 0; }
+    .pageTitle { padding: 1rem 0 4rem 0;}
     .projects-tabs{ margin: 0 auto 4rem;}
 
     /* 讓 tab 分類可於手機上完整顯示，改採自適應換行 */
@@ -138,11 +139,15 @@
 @media screen and (max-width: 640px) {
     html, body { font-size: 14px; }
 
-    .grid { gap: 2.5rem; }
+    .grid { gap: 1.5rem; }
     .grid .card { width: 100%; }   /* /1 = 1格 */
 
     .btn-hero { width: 100%; max-width: 240px; }
     .hero-actions { flex-direction: column; align-items: center; }
     .privacyContent .block { padding: 30px 0; }
     .clientGrid { grid-template-columns: repeat(2, 1fr); }
+
+    .homepage-projects-section .container { padding: 0; }
+    .homepage-projects-section .grid-wrap::before{ left: -50px;}
+    .homepage-projects-section .grid-wrap::after { right: -50px; }
 }

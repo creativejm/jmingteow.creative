@@ -245,5 +245,8 @@ input[type=radio]+Label::before,
 .UI.adjust::before {content: 'adjust';}
 .UI.smartphone::before {content: 'smartphone';}
 .UI.outward::before {content: 'arrow_outward';}
+.UI.longprevious::before {content: 'arrow_left_alt';}
+.UI.longnext::before {content: 'arrow_right_alt';}
+
 
 

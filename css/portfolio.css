@@ -131,7 +131,7 @@ header nav dd a:hover { color: var(--pri01); }
 
 
 /* footer */
-.index footer{margin-top: 0;border-top:0px solid; }
+/* .index footer{margin-top: 0;border-top:0px solid; } */
 footer{position: relative; padding-top: 5rem; margin-top: 5rem; border-top: 1px solid var(--border); z-index: 0; overflow: hidden;background-color:var(--bg);} 
 footer .container { display: flex; flex-direction: column; }
 footer .footerTop { display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 4rem; gap: 40px; }
@@ -175,12 +175,13 @@ select, .card, .polaroid, .sticky, .wallObj { cursor: none; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
  
 /* PAGE TITLE */
+.index .pageTitle { padding: 3rem 0 0 0; }
 .pageTitle { padding: 3rem 0 5rem 0; margin: 0 auto; }
 .pageTitle .title { font-family: var(--fontSans);/* font-family: var(--fontScript);font-weight: 700; */text-align: center; font-size: var(--fsXL); font-weight: 600; color: var(--pri04); margin-bottom: 1rem; } 
 .pageTitle .subtitle { font-family: var(--fontSans);text-align: center; font-style: italic; font-size: var(--fsS); font-weight: 300; color: var(--pri04); }
  
 /* BUTTONS */
-.btnBox { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 5rem;}
+.btnBox { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 3rem;}
 .btn { display: inline-flex; align-items: center; background:#3b3731; color: var(--bg); font-family: var(--fontSans); font-size: var(--fsXS); font-weight: 400; letter-spacing: 0.1rem; text-transform: uppercase; padding: 14px 28px; border-radius: 99px; transition:.3s; }
 .btn:hover { background: var(--pri06); color: #FFF; transform: scale(1.04);}
 .btn.outline { background: transparent; color: var(--pri04); border: 1.5px solid rgba(42, 32, 24, 0.3); }
@@ -278,6 +279,14 @@ select, .card, .polaroid, .sticky, .wallObj { cursor: none; }
 .back a{ font-size: var(--fsS);font-weight: 300; color: var(--pri04);  transition: .3s; position: relative;  display: inline-block;}
 .back a:hover{ color: #000;}
 
+/* Prev / Next links on detail pages */
+.project-detail-wrapper{ position: relative; }
+.project-nav { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid #eceff1; }
+.project-nav a { font-size: var(--fsL); color: #37474f; display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem; border-radius: 50%; transition: all .2s ease; }
+.project-nav a:hover { color: #111111; background: #f6f8fa; }
+.project-nav a.prev { transform: scaleX(-1); }
+.project-nav a.next { }
+.project-nav a.back-btn{font-size: var(--fsP);}
 
 /* 1. 基礎容器設定（讓內容置中，限制最大寬度，看久了眼睛才不累） */
 .preview-container, .project-detail-wrapper { margin: 0 auto; line-height: 1.7; text-align: left; width: 100%; box-sizing: border-box; }
@@ -657,13 +666,46 @@ body.dark-mode .footerBrand img { filter: brightness(0) invert(1) opacity(0.9); 
 body.dark-mode .homepage-projects-section {border-top: 1px solid rgba(255, 255, 255, 0.05);}
 
 /* 隱藏水平滾動條 */
-.homepage-projects-section .grid {display: flex;flex-wrap: nowrap;overflow-x: auto;gap: 3rem;padding: 0.5rem 0.5rem 2.5rem 0.5rem; margin: 0 -0.5rem;-webkit-overflow-scrolling: touch;scroll-behavior: auto; /* 用 JS 橫向滾動時，用 auto 更流暢且不衝突 */}
+.homepage-projects-section .grid {display: flex;flex-wrap: nowrap;overflow-x: auto;gap: 3rem;padding: 3rem 0.5rem 3rem 0.5rem; margin: 0 -0.5rem;-webkit-overflow-scrolling: touch;scroll-behavior: auto; /* 用 JS 橫向滾動時，用 auto 更流暢且不衝突 */}
 .homepage-projects-section .grid::-webkit-scrollbar {display: none;}
 .homepage-projects-section .grid {-ms-overflow-style: none;  /* IE and Edge */scrollbar-width: none;  /* Firefox */}
 .homepage-projects-section .grid .card { flex: 0 0 420px; /* 固定寬度，不因 flex 擠壓變形 */width: 420px;margin-bottom: 0;transition: transform 0.3s var(--easeSmooth), box-shadow 0.3s var(--easeSmooth);}
 .homepage-projects-section .info {padding: 1.5rem 0.5rem 0 0.5rem;}
 .homepage-projects-section .info .title {font-size: var(--fsP);font-weight: 500;color: var(--pri04);margin-bottom: 0.5rem;}
 .homepage-projects-section .info .tag {font-size: var(--fsXS);color: var(--pri06);}
+
+/* Grid wrapper for blurred/soft edges */
+.homepage-projects-section .grid-wrap { position: relative; }
+.homepage-projects-section .grid-wrap::before,
+.homepage-projects-section .grid-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0.25rem;
+  bottom: 2.5rem; /* match grid bottom padding area */
+  width: var(--hp-edge-width, 6rem);
+  pointer-events: none;
+  z-index: 2;
+  filter: blur(6px);
+}
+.homepage-projects-section .grid-wrap::before {
+  left: -20px;
+  background: linear-gradient(
+    to right,
+    var(--bg) 0%,
+    var(--bg) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.homepage-projects-section .grid-wrap::after {
+  right: -20px;
+  background: linear-gradient(
+    to left,
+    var(--bg) 0%,
+    var(--bg) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
 
 /* Pager Style */
 .pager-wrap {
@@ -717,5 +759,10 @@ body.dark-mode .pager-wrap span:hover {
 body.dark-mode .pager-wrap span.active {
   background: var(--pri04, #d7c28a);
   color: #1c1815;
+}
+
+/* Mobile: hide header logo when mobile menu is open (body gets MobileMenuOn) */
+@media (max-width: 768px) {
+  body.MobileMenuOn header a.logo { display: none !important; }
 }
 

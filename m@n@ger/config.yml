@@ -77,12 +77,12 @@ collections:
           hint: "開啟後這個作品會出現在首頁的 Selected Works 區塊，不開啟則不顯示",
         }
       - &common_featured_all {
-          label: "精選放在 All Works 最上方",
+          label: "精選放在 All Projects 最上方",
           name: "featured_all",
           widget: "boolean",
           default: false,
           required: false,
-          hint: "開啟後這個作品會出現在 Projects 頁面 All Works 最上方",
+          hint: "開啟後這個作品會出現在 Projects 頁面 All Projects 最上方",
         }
       - &common_cover {
           label: "列表封面圖",

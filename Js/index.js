@@ -83,7 +83,7 @@
                     renderProjectCard(item.id, item.data, item.folder, true);
                 });
 
-                // 4. 其餘一般作品進入 All Works 分頁清單，並渲染到各自分類網格
+                // 4. 其餘一般作品進入 All Projects 分頁清單，並渲染到各自分類網格
                 allNonFeaturedProjects = nonFeaturedItems;
                 allNonFeaturedProjects.forEach(function(item) {
                     renderProjectCard(item.id, item.data, item.folder, false);
@@ -131,7 +131,7 @@
                 '</a>' +
             '</div>';
 
-        // featured_all 作品：加到 All Works 精選區
+        // featured_all 作品：加到 All Projects 精選區
         if (isFeatured) {
             $('#grid-featured-works').append(cardHTML);
         }
@@ -145,7 +145,7 @@
         $(gridSelectorId).append(cardHTML);
     }
 
-    // ── 渲染分頁 All Works ──
+    // ── 渲染分頁 All Projects ──
     window.renderAllWorksPage = function(page, shouldScroll) {
         currentAllWorksPage = page;
         var totalPages = Math.ceil(allNonFeaturedProjects.length / itemsPerPage);

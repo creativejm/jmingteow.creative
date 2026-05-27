@@ -1,7 +1,7 @@
 {
   "name": "jm-portfolio",
   "version": "1.0.0",
-  "description": "JM Portfolio Website",
+  "description": "Jming Studio Website",
   "scripts": {
     "cms":  "node start-cms.js",
     "sync": "node sync.js",

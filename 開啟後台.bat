@@ -1,8 +1,8 @@
 @echo off
-title JM Portfolio 後台工具
+title Jming Studio 後台工具
 echo.
 echo  ╔══════════════════════════════════════╗
-echo  ║     JM Portfolio 後台管理工具啟動     ║
+echo  ║     Jming Studio 後台管理工具啟動     ║
 echo  ╚══════════════════════════════════════╝
 echo.
 
