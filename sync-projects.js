@@ -1,4 +1,4 @@
-﻿/**
+/**
  * sync-projects.js
  * 1. 自動掃描 data/projects/ 各分類資料夾，更新 data/projects.json
  * 2. 自動補建 projects/detail/{id}.html（若不存在）
@@ -14,7 +14,7 @@ const path = require('path');
 const CATEGORIES   = ['logo-design', 'web-design', 'illustration', 'animation', 'photography'];
 const DATA_DIR     = path.join(__dirname, 'data', 'projects');
 const OUTPUT       = path.join(__dirname, 'data', 'projects.json');
-const DETAIL_DIR   = path.join(__dirname, 'projects', 'detail');
+const DETAIL_DIR   = path.join(__dirname, 'projects');
 
 // ── Detail .html 模板 ──
 function detailTemplate(id) {
@@ -29,27 +29,27 @@ function detailTemplate(id) {
   <meta property="og:site_name" content="Jming Studio" />
   <meta property="og:type" content="website" />
 
-  <link rel="stylesheet" href="../../css/default.css" />
-  <link rel="stylesheet" href="../../css/ui.css" />
-  <link rel="stylesheet" href="../../css/portfolio.css" />
-  <link rel="stylesheet" href="../../css/mediaqueries.css" />
+  <link rel="stylesheet" href="../css/default.css" />
+  <link rel="stylesheet" href="../css/ui.css" />
+  <link rel="stylesheet" href="../css/portfolio.css" />
+  <link rel="stylesheet" href="../css/mediaqueries.css" />
 
-  <script src="../../Js/rm/jquery-3.4.1.min.js"></script>
+  <script src="../Js/rm/jquery-3.4.1.min.js"></script>
 
   <!-- 告訴 detail.js 這個頁面的作品 ID 和路徑深度 -->
   <script>
     var PROJECT_ID  = '${id}';
-    var PATH_PREFIX = '../../';
+    var PATH_PREFIX = '../';
   </script>
 
-  <script src="../../Js/rm/realmediaScript.js" defer></script>
-  <script src="../../Js/main.js" defer></script>
-  <script src="../../Js/detail.js" defer></script>
+  <script src="../Js/rm/realmediaScript.js" defer></script>
+  <script src="../Js/main.js" defer></script>
+  <script src="../Js/detail.js" defer></script>
 
   <script>
     $(function () {
-      $('header').load('../../include/header.html');
-      $('footer').load('../../include/footer.html');
+      $('header').load('../include/header.html');
+      $('footer').load('../include/footer.html');
     });
   </script>
 </head>
@@ -66,7 +66,7 @@ function detailTemplate(id) {
           <img id="detailCoverImg" src="" alt="Project Cover" />
           <div id="detailSections"></div>
           <div class="back">
-            <a href="../index.html">All Projects</a>
+            <a href="index.html">All Projects</a>
           </div>
         </div>
       </div>

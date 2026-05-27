@@ -8,8 +8,8 @@ $(function () {
         || new URLSearchParams(window.location.search).get('id')
         || '';
 
-    // ── 路徑前綴：獨立頁面在 projects/detail/ 下，要往上兩層 ──
-    // 一般 detail.html 在 projects/ 下，往上一層即可
+    // ── 路徑前綴：作品頁在 projects/ 下，要往上一層 ──
+    // 一般 detail.html 也在 projects/ 下，往上一層即可
     var prefix = window.PATH_PREFIX || '../';
 
     if (!projectId) {
@@ -216,10 +216,13 @@ $(function () {
 
             function detailHrefFor(id) {
                 var path = window.location.pathname || '';
-                if (path.indexOf('/projects/detail/') !== -1 || path.indexOf('\\projects\\detail\\') !== -1) {
+                // 如果目前是在 /projects/ 目錄下的個別作品頁（但排除 fallback 用的 detail.html 及 index.html）
+                if ((path.indexOf('/projects/') !== -1 || path.indexOf('\\projects\\') !== -1) && 
+                    path.indexOf('detail.html') === -1 && 
+                    path.indexOf('index.html') === -1) {
                     return id + '.html';
                 }
-                return prefix + 'projects/detail.html?id=' + encodeURIComponent(id);
+                return prefix + 'projects/' + id + '.html';
             }
 
             if (prevId) {

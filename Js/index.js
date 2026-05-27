@@ -1,4 +1,4 @@
-﻿$(function () {
+$(function () {
     var allNonFeaturedProjects = [];
     var itemsPerPage = 12;  // 精選不進分頁，12個/頁讓非精選作品更容易觸發pager
     var currentAllWorksPage = 1;
@@ -120,7 +120,7 @@
 
         var cardHTML =
             '<div class="card" data-id="' + projectId + '">' +
-                '<a href="detail/' + projectId + '.html">' +
+                '<a href="' + projectId + '.html">' +
                     '<div class="thumb">' +
                         '<img src="' + fixedCover + '" alt="' + project.title + '" />' +
                     '</div>' +
@@ -182,7 +182,7 @@
 
             var cardHTML =
                 '<div class="card" data-id="' + item.id + '">' +
-                    '<a href="detail/' + item.id + '.html">' +
+                    '<a href="' + item.id + '.html">' +
                         '<div class="thumb">' +
                             '<img src="' + fixedCover + '" alt="' + item.data.title + '" />' +
                         '</div>' +

@@ -299,7 +299,7 @@ select, .card, .polaroid, .sticky, .wallObj { cursor: none; }
 #detailTitle { font-size: var(--fsL); font-weight: 700; color: #1a1a1a; margin-top: 0;  margin: 2rem 0; }
 
 /* 4. 後設資料區欄位（年份、客戶、分類，做成優雅的橫向微章質感） */
-.meta-info {display: flex;flex-wrap: wrap;gap: 4rem; margin: 25px 0;padding-bottom: 20px;border-bottom: 1px solid #eceff1;}
+.meta-info {display: flex;flex-wrap: wrap;gap: 4rem; margin: 25px 0;padding-bottom: 20px;}
 .meta-info div {font-size:var(--fsP);color: #607d8b; display: flex;align-items: center;}
 .meta-info div b {color: var(--pri05);font-weight: 600;font-family: var(--fontSans);font-size: var(--fsS);margin-right: 1rem;}
 .meta-info div span {color: var(--pri04);font-weight: 600;font-family: var(--fontSans);font-size: var(--fsP2);}

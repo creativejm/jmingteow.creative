@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="utf-8">
@@ -9,27 +9,27 @@
   <meta property="og:site_name" content="Jming Studio" />
   <meta property="og:type" content="website" />
 
-  <link rel="stylesheet" href="../../css/default.css" />
-  <link rel="stylesheet" href="../../css/ui.css?v=1.0.3" />
-  <link rel="stylesheet" href="../../css/portfolio.css?v=1.0.3" />
-  <link rel="stylesheet" href="../../css/mediaqueries.css" />
+  <link rel="stylesheet" href="../css/default.css" />
+  <link rel="stylesheet" href="../css/ui.css" />
+  <link rel="stylesheet" href="../css/portfolio.css" />
+  <link rel="stylesheet" href="../css/mediaqueries.css" />
 
-  <script src="../../Js/rm/jquery-3.4.1.min.js"></script>
+  <script src="../Js/rm/jquery-3.4.1.min.js"></script>
 
   <!-- 告訴 detail.js 這個頁面的作品 ID 和路徑深度 -->
   <script>
-    var PROJECT_ID  = 'beforesunset';
-    var PATH_PREFIX = '../../';
+    var PROJECT_ID  = 'hometown';
+    var PATH_PREFIX = '../';
   </script>
 
-  <script src="../../Js/rm/realmediaScript.js" defer></script>
-  <script src="../../Js/main.js" defer></script>
-  <script src="../../Js/detail.js" defer></script>
+  <script src="../Js/rm/realmediaScript.js" defer></script>
+  <script src="../Js/main.js" defer></script>
+  <script src="../Js/detail.js" defer></script>
 
   <script>
     $(function () {
-      $('header').load('../../include/header.html');
-      $('footer').load('../../include/footer.html');
+      $('header').load('../include/header.html');
+      $('footer').load('../include/footer.html');
     });
   </script>
 </head>
@@ -45,6 +45,9 @@
           <p id="detailDesc"></p>
           <img id="detailCoverImg" src="" alt="Project Cover" />
           <div id="detailSections"></div>
+          <div class="back">
+            <a href="index.html">All Projects</a>
+          </div>
         </div>
       </div>
     </div>

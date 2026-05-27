@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    PROJECTS.JS
    讀取 /data/projects.json 的作品清單，
    再依各作品 id 讀取 /data/projects/{folder}/{id}.json
@@ -59,7 +59,7 @@ $(function () {
     var cover = proj.cover_image || '';
     var title = proj.title || id;
     var year  = proj.year  || '';
-    var url   = '/projects/detail/' + id + '.html';
+    var url   = '/projects/' + id + '.html';
 
     // 修正本地上傳圖片路徑（../images/ → /Images/）
     if (cover && !cover.startsWith('http')) {

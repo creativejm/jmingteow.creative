@@ -1,7 +1,7 @@
 {
   "projects": [
     {
-      "id": "aliakaodanmuthu",
+      "id": "project-001",
       "folder": "logo-design"
     },
     {
@@ -9,23 +9,15 @@
       "folder": "logo-design"
     },
     {
+      "id": "aliakaodanmuthu",
+      "folder": "logo-design"
+    },
+    {
       "id": "newone",
       "folder": "logo-design"
     },
     {
-      "id": "project-001",
-      "folder": "logo-design"
-    },
-    {
-      "id": "Mercuries Life Insurance",
-      "folder": "web-design"
-    },
-    {
       "id": "beastkingdom",
-      "folder": "web-design"
-    },
-    {
-      "id": "moniecetea",
       "folder": "web-design"
     },
     {
@@ -33,8 +25,20 @@
       "folder": "web-design"
     },
     {
+      "id": "moniecetea",
+      "folder": "web-design"
+    },
+    {
+      "id": "Mercuries Life Insurance",
+      "folder": "web-design"
+    },
+    {
       "id": "wixtar",
       "folder": "web-design"
+    },
+    {
+      "id": "hometown",
+      "folder": "illustration"
     },
     {
       "id": "beforesunset",
@@ -45,23 +49,15 @@
       "folder": "illustration"
     },
     {
-      "id": "gigifamily",
-      "folder": "illustration"
-    },
-    {
-      "id": "hometown",
-      "folder": "illustration"
-    },
-    {
       "id": "rcfamily",
       "folder": "illustration"
     },
     {
-      "id": "beforesunset",
-      "folder": "animation"
+      "id": "gigifamily",
+      "folder": "illustration"
     },
     {
-      "id": "hometown",
+      "id": "onmyway",
       "folder": "animation"
     },
     {
@@ -70,10 +66,6 @@
     },
     {
       "id": "nostalgia",
-      "folder": "animation"
-    },
-    {
-      "id": "onmyway",
       "folder": "animation"
     }
   ]

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * sync.js — 作品清單自動同步 + 個別頁面生成器
  * 啟動後自動監控 data/projects/ 資料夾
  * 1. 更新 data/projects/all.json
@@ -12,14 +12,14 @@ const path = require('path');
 
 const ROOT        = path.join(__dirname, 'data', 'projects');
 const ALL_JSON    = path.join(__dirname, 'data', 'projects.json');
-const DETAIL_DIR  = path.join(__dirname, 'projects', 'detail');
+const DETAIL_DIR  = path.join(__dirname, 'projects');
 const SKIP_FILES  = new Set(['all.json', 'manifest.json', 'projects.json']);
 const FOLDERS     = ['logo-design', 'web-design', 'illustration', 'animation'];
 const POLL_MS     = 3000;
 
 // ── 生成每個作品的獨立 .html 頁面 ──
-// 路徑：projects/detail/jianyuan.html
-// 相對路徑往上兩層到根目錄
+// 路徑：projects/jianyuan.html
+// 相對路徑往上一層到根目錄
 function generateDetailPage(id) {
     if (!fs.existsSync(DETAIL_DIR)) {
         fs.mkdirSync(DETAIL_DIR, { recursive: true });
@@ -38,27 +38,27 @@ function generateDetailPage(id) {
   <meta property="og:site_name" content="Jming Studio" />
   <meta property="og:type" content="website" />
 
-  <link rel="stylesheet" href="../../css/default.css" />
-  <link rel="stylesheet" href="../../css/ui.css" />
-  <link rel="stylesheet" href="../../css/portfolio.css" />
-  <link rel="stylesheet" href="../../css/mediaqueries.css" />
+  <link rel="stylesheet" href="../css/default.css" />
+  <link rel="stylesheet" href="../css/ui.css" />
+  <link rel="stylesheet" href="../css/portfolio.css" />
+  <link rel="stylesheet" href="../css/mediaqueries.css" />
 
-  <script src="../../Js/rm/jquery-3.4.1.min.js"></script>
+  <script src="../Js/rm/jquery-3.4.1.min.js"></script>
 
   <!-- 告訴 detail.js 這個頁面的作品 ID 和路徑深度 -->
   <script>
     var PROJECT_ID  = '${id}';
-    var PATH_PREFIX = '../../';
+    var PATH_PREFIX = '../';
   </script>
 
-  <script src="../../Js/rm/realmediaScript.js" defer></script>
-  <script src="../../Js/main.js" defer></script>
-  <script src="../../Js/detail.js" defer></script>
+  <script src="../Js/rm/realmediaScript.js" defer></script>
+  <script src="../Js/main.js" defer></script>
+  <script src="../Js/detail.js" defer></script>
 
   <script>
     $(function () {
-      $('header').load('../../include/header.html');
-      $('footer').load('../../include/footer.html');
+      $('header').load('../include/header.html');
+      $('footer').load('../include/footer.html');
     });
   </script>
 </head>
@@ -75,7 +75,7 @@ function generateDetailPage(id) {
           <img id="detailCoverImg" src="" alt="Project Cover" />
           <div id="detailSections"></div>
           <div class="back">
-            <a href="../index.html">All Projects</a>
+            <a href="index.html">All Projects</a>
           </div>
         </div>
       </div>
@@ -87,7 +87,7 @@ function generateDetailPage(id) {
 </html>`;
 
     fs.writeFileSync(htmlPath, html, 'utf8');
-    console.log('    📄 生成頁面：projects/detail/' + id + '.html');
+    console.log('    📄 生成頁面：projects/' + id + '.html');
 }
 
 // ── 掃描所有 JSON，重建 all.json + 生成 .html ──
@@ -153,7 +153,7 @@ if (isOnce) {
 } else {
     console.log('🔄 作品同步器已啟動，每 ' + (POLL_MS / 1000) + ' 秒自動掃描...');
     console.log('📁 監控路徑：' + ROOT);
-    console.log('📄 頁面輸出：projects/detail/*.html');
+    console.log('📄 頁面輸出：projects/*.html');
     console.log('─────────────────────────────────────');
     buildAllJson();
     setInterval(buildAllJson, POLL_MS);
