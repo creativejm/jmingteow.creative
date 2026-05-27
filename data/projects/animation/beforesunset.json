@@ -1,0 +1,12 @@
+{
+  "client": "hi",
+  "featured": false,
+  "order": 1,
+  "cover_image": "../images/projects/lamp.png",
+  "subtitle": "",
+  "title": "Before Sunset",
+  "id": "beforesunset",
+  "description": "",
+  "year": "2023",
+  "category": "animation"
+}

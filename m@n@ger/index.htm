@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>作品集管理後台</title>
+  <link rel="cms-config-url" type="text/yaml" href="config.yml" />
+</head>
+
+<body>
+
+  <!-- Decap CMS 核心（放 body 底部確保同步載入完成才執行後面的 script） -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <script>
+    // ── 注入後台 UI 美化 CSS ──
+    CMS.registerPreviewStyle([
+      'body { background: #f7f6f3; font-family: -apple-system, Segoe UI, sans-serif; }',
+      '.project-detail-wrapper { max-width: 760px; margin: 0 auto; padding: 32px 24px; }',
+      'h1#detailTitle { font-size: 26px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }',
+      '.meta-info { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 24px; }',
+      '.meta-info div { background: #f0ede8; color: #555; font-size: 13px; padding: 4px 12px; border-radius: 20px; }',
+      '.meta-info b { color: #333; margin-right: 4px; }',
+      '#detailDesc { color: #666; font-size: 15px; line-height: 1.8; margin-bottom: 24px; font-style: italic; }',
+      '#detailCoverImg { width: 100%; border-radius: 10px; display: block; margin-bottom: 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }',
+      '.sectionItem { margin-bottom: 32px; }',
+      '.sectionImage img { width: 100%; border-radius: 8px; display: block; }',
+      '.sectionText .bodyText { font-size: 15px; color: #444; line-height: 1.9; white-space: pre-wrap; }',
+      '.sectionTwoImages { display: flex; gap: 16px; }',
+      '.sectionTwoImages .imgHalf { flex: 1; }',
+      '.sectionTwoImages .imgHalf img { width: 100%; border-radius: 8px; display: block; }',
+      '.sectionThreeImages { display: flex; gap: 16px; }',
+      '.sectionThreeImages .imgThird { flex: 1; }',
+      '.sectionThreeImages .imgThird img { width: 100%; border-radius: 8px; display: block; }'
+    ].join('\n'), { raw: true });
+
+    CMS.registerPreviewStyle('../css/portfolio.css');
+
+    // ── 預覽模板 ──
+    var PreviewTemplate = createClass({
+      render: function () {
+        var entry = this.props.entry;
+        if (!entry) return h('div', {}, '正在載入...');
+
+        var title = entry.getIn(['data', 'title']) || '未命名作品';
+        var year = entry.getIn(['data', 'year']) || '';
+        var category = entry.getIn(['data', 'category']) || '';
+        var subtitle = entry.getIn(['data', 'subtitle']) || '';
+        var description = entry.getIn(['data', 'description']) || '';
+        var role = entry.getIn(['data', 'role']) || '';
+        var coverAlign = entry.getIn(['data', 'cover_align']) || 'full';
+        var descAlign = entry.getIn(['data', 'desc_align']) || 'left';
+
+        var rawCover = entry.getIn(['data', 'cover_image']);
+        var coverImage = rawCover ? this.props.getAsset(rawCover).toString() : '';
+
+        var pageBlocks = entry.getIn(['data', 'page_blocks']);
+        var blocksHTML = '';
+
+        if (pageBlocks && typeof pageBlocks.toJS === 'function') {
+          pageBlocks.toJS().forEach(function(block) {
+            if (!block) return;
+            if (block.type === 'image_block' && block.image) {
+              var img = this.props.getAsset(block.image).toString();
+              blocksHTML += '<div class="sectionItem sectionImage"><img src="' + img + '" alt="Image" /></div>';
+            } else if (block.type === 'text_block' && block.text) {
+              blocksHTML += '<div class="sectionItem sectionText"><p class="bodyText">' + block.text + '</p></div>';
+            } else if (block.type === 'two_images_block') {
+              var l = block.image_left ? this.props.getAsset(block.image_left).toString() : '';
+              var r = block.image_right ? this.props.getAsset(block.image_right).toString() : '';
+              blocksHTML += '<div class="sectionItem sectionTwoImages"><div class="imgHalf">' + (l ? '<img src="' + l + '" />' : '') + '</div><div class="imgHalf">' + (r ? '<img src="' + r + '" />' : '') + '</div></div>';
+            } else if (block.type === 'three_images_block') {
+              var l3 = block.image_left ? this.props.getAsset(block.image_left).toString() : '';
+              var c3 = block.image_center ? this.props.getAsset(block.image_center).toString() : '';
+              var r3 = block.image_right ? this.props.getAsset(block.image_right).toString() : '';
+              blocksHTML += '<div class="sectionItem sectionThreeImages"><div class="imgThird">' + (l3 ? '<img src="' + l3 + '" />' : '') + '</div><div class="imgThird">' + (c3 ? '<img src="' + c3 + '" />' : '') + '</div><div class="imgThird">' + (r3 ? '<img src="' + r3 + '" />' : '') + '</div></div>';
+            } else if (block.type === 'video_block' && block.video_url) {
+              blocksHTML += '<div class="sectionItem" style="background:#111;padding:30px;text-align:center;color:#fff;border-radius:8px;"><p style="margin:0;">🎥 ' + block.video_url + '</p></div>';
+            } else if (block.type === 'embed_block') {
+              blocksHTML += '<div class="sectionItem" style="border:1px dashed #ccc;padding:20px;text-align:center;color:#666;">🔗 [嵌入區塊]</div>';
+            } else if (block.type === 'download_block') {
+              blocksHTML += '<div class="sectionItem" style="text-align:center;padding:10px 0;"><button style="pointer-events:none;padding:12px 28px;background:#2a2018;color:#fff;border:none;border-radius:99px;">' + (block.button_text || '下載檔案') + '</button></div>';
+            }
+          }.bind(this));
+        }
+
+        var subtitleTag = subtitle ? '&nbsp;<span style="margin-left:6px;">' + subtitle + '</span>' : '';
+        var metaHTML = '<div class="meta-info"><div><b>Services:</b><span>' + category + subtitleTag + '</span></div><div><b>Year:</b><span>' + year + '</span></div>' + (role ? '<div><b>Role:</b><span>' + role + '</span></div>' : '') + '</div>';
+        
+        var descHTML = (description && description.trim() !== '') 
+            ? '<p id="detailDesc" class="align-' + descAlign + '">' + description + '</p>' 
+            : '';
+            
+        var coverHTML = coverImage ? '<img id="detailCoverImg" class="align-' + coverAlign + '" src="' + coverImage + '" alt="' + title + '" />' : '';
+
+        return h('div', { className: 'project-detail-wrapper' },
+          h('div', {
+            dangerouslySetInnerHTML: {
+              __html: '<h1 id="detailTitle">' + title + '</h1>' + metaHTML + descHTML + coverHTML + '<div id="detailSections">' + blocksHTML + '</div>'
+            }
+          })
+        );
+      }
+    });
+
+    CMS.registerPreviewTemplate('logo-design', PreviewTemplate);
+    CMS.registerPreviewTemplate('web-design', PreviewTemplate);
+    CMS.registerPreviewTemplate('illustration', PreviewTemplate);
+    CMS.registerPreviewTemplate('animation', PreviewTemplate);
+    CMS.registerPreviewTemplate('photography', PreviewTemplate);
+  </script>
+</body>
+
+</html>

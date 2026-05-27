@@ -1,0 +1,80 @@
+{
+  "projects": [
+    {
+      "id": "aliakaodanmuthu",
+      "folder": "logo-design"
+    },
+    {
+      "id": "jianyuan",
+      "folder": "logo-design"
+    },
+    {
+      "id": "newone",
+      "folder": "logo-design"
+    },
+    {
+      "id": "project-001",
+      "folder": "logo-design"
+    },
+    {
+      "id": "Mercuries Life Insurance",
+      "folder": "web-design"
+    },
+    {
+      "id": "beastkingdom",
+      "folder": "web-design"
+    },
+    {
+      "id": "moniecetea",
+      "folder": "web-design"
+    },
+    {
+      "id": "mrbrown",
+      "folder": "web-design"
+    },
+    {
+      "id": "wixtar",
+      "folder": "web-design"
+    },
+    {
+      "id": "beforesunset",
+      "folder": "illustration"
+    },
+    {
+      "id": "diqifamily",
+      "folder": "illustration"
+    },
+    {
+      "id": "gigifamily",
+      "folder": "illustration"
+    },
+    {
+      "id": "hometown",
+      "folder": "illustration"
+    },
+    {
+      "id": "rcfamily",
+      "folder": "illustration"
+    },
+    {
+      "id": "beforesunset",
+      "folder": "animation"
+    },
+    {
+      "id": "hometown",
+      "folder": "animation"
+    },
+    {
+      "id": "imfine",
+      "folder": "animation"
+    },
+    {
+      "id": "nostalgia",
+      "folder": "animation"
+    },
+    {
+      "id": "onmyway",
+      "folder": "animation"
+    }
+  ]
+}

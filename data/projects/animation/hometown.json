@@ -1,0 +1,12 @@
+{
+  "client": "現在",
+  "featured": false,
+  "order": 2,
+  "cover_image": "../images/projects/animation.png",
+  "subtitle": "",
+  "title": "Hometown",
+  "id": "hometown",
+  "description": "",
+  "year": "2021",
+  "category": "animation"
+}

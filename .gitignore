@@ -1,0 +1,21 @@
+# 忽略 Node.js 模組資料夾（太大，不需上傳）
+node_modules/
+
+# 忽略編輯器產生的本機設定檔
+.vscode/
+.DS_Store
+
+# 忽略除錯或暫存檔案
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 忽略大型影片和 PDF 文件（超過 GitHub 100MB 限制）
+*.mp4
+*.MP4
+*.mov
+*.MOV
+*.avi
+*.AVI
+*.pdf
+*.PDF

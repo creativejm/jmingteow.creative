@@ -1,0 +1,121 @@
+﻿@charset "utf-8";
+/* 基本定義 */
+*{-webkit-text-size-adjust:none; -webkit-font-smoothing:antialiased; margin:0; padding:0; }
+pre{white-space: pre-wrap;}
+img{border:0; -ms-interpolation-mode: bicubic;}
+a, a:link, a:visited, a:active, a:hover, area {text-decoration: none; cursor:pointer;}
+a{display: inline-block; color: #000;}
+table { width:auto; border-collapse: collapse; border-spacing: 0; }
+.clear{ clear:both;}
+:focus {outline: 0;}
+
+/* htmleditor recover 
+.htmlEditor 為頁面用html編輯器顯示的區塊
+.cke_editable 為html編輯器的div class
+*/
+.htmlEditor .cke_inner,
+.htmlEditor .cke_wysiwyg_frame, 
+.htmlEditor .cke_wysiwyg_div{ background-color:transparent;}
+		
+.htmlEditor ul, .htmlEditor ol, 
+.cke_editable ul, .cke_editable ol{ padding-left:30px;}
+.htmlEditor img{ max-width:100%;}
+
+/* html編輯器 style */
+.htmlEditor,
+.cke_editable { width: 100%;margin-bottom: 4rem;padding: 0 1rem;}
+.htmlEditor img,
+.cke_editable img { width: 100%; margin-bottom:var(--pdh);}
+.htmlEditor figure,
+.cke_editable figure{margin-bottom:var(--pdq);}
+.htmlEditor h1 img,
+.cke_editable h1 img { width: 100%;}
+.htmlEditor h1,
+.cke_editable h1 { font-size: var(--fsXL); font-weight: 700; margin-bottom: var(--pd); margin-top:var(--pd); position: relative;}
+.htmlEditor h2,
+.cke_editable h2 { font-size: var(--fsXL); font-weight: 700; margin-bottom: var(--pd); margin-top:var(--pd); position: relative;}
+.htmlEditor h3,
+.cke_editable h3 { font-size: var(--fsL); font-weight: 500; margin-bottom: var(--pdq); margin-top:var(--pdq); position: relative;}
+.htmlEditor h4,
+.cke_editable h4 { font-size: var(--fsM); font-weight: 500; margin-bottom: var(--pdq); margin-top:var(--pdq); position: relative;}
+.htmlEditor h5,
+.cke_editable h5 { font-size: var(--fsP); font-weight: 400; margin-bottom: var(--pdh); margin-top:var(--pdh); position: relative;}
+.htmlEditor h6,
+.cke_editable h6 { font-size: var(--fsS); font-weight: 400; margin-bottom: var(--pdh); margin-top:var(--pdh); position: relative;}
+.htmlEditor p,
+.cke_editable p { font-size: var(--fsP); font-weight: 300; margin-bottom: var(--pdh); color: #555; position: relative;line-height: 2;}
+.htmlEditor strong,
+.cke_editable strong { font-weight: 700;}
+.htmlEditor pre,
+.cke_editable pre {}
+.htmlEditor address,
+.cke_editable address {}
+.htmlEditor blockquote,
+.cke_editable blockquote {}
+.htmlEditor ol li,
+.cke_editable ol li,
+.htmlEditor ul li,
+.cke_editable ul li {margin: 0 0 .5rem 1rem; display: list-item; position: relative;}
+.htmlEditor ol li,
+.cke_editable ol li {list-style: decimal;}
+.htmlEditor ul li,
+.cke_editable ul li {list-style: disc;}
+.htmlEditor a, .htmlEditor a:link, .htmlEditor a:visited, .htmlEditor a:active, .htmlEditor area,
+.cke_editable a, .cke_editable a:link, .cke_editable a:visited, .cke_editable a:active, .cke_editable area{ text-decoration: none; color: var(--pri04);}
+.htmlEditor a:hover, .cke_editable a:hover{ color: var(--pri02);}
+.htmlEditor a.anchor,
+.cke_editable a.anchor {position: absolute; transform: translateY(-100px);}
+.htmlEditor a img{width: 100%;}
+
+/* 環境錯誤提示 */
+.messagebox.alert{
+	width:100%;padding:8px 0;background-color:#c00;color:#FFF;font-size:14px;
+	font-family:Arial, Helvetica, "微軟正黑體", "新細明體", 'Microsoft JhengHei', 'LiHei Pro', sans-serif;
+	display:none;text-align:left;
+	position:absolute;position:relative;top:0;z-index:999999;
+	-moz-box-shadow:2px 2px 2px rgba(0,0,0,.4);-webkit-box-shadow: 2px 2px 2px rgba(0,0,0,.4);box-shadow:2px 2px 2px rgba(0,0,0,.4);
+}
+.messagebox.alert .closemessagebox{float:right;margin-right:20px;display:block;cursor:pointer;}
+.messagebox.alert .closemessagebox::after{ content:"關閉繼續瀏覽"; display:inline-block; margin-left:5px;}
+.messagebox.alert .sorry{margin-left:20px;}
+.messagebox.alert .note{margin-top:5px; padding:3px;}
+@media screen and (max-width: 640px) {
+	.messagebox.alert{font-size:24px;}
+	.messagebox.alert .closemessagebox::after{ content:"關閉";}
+}
+/* 行動裝置非預設瀏覽器提示*/
+.mbk{ width:100%; height:100%; background:rgba(0,0,0,.8) url(line.png) no-repeat center; position:fixed; top:0; left:0; z-index:99999;}
+
+/* 反白顏色(FF需另外定義'::-moz-selection') */
+::selection {background:#D6CEBF; color:#FFF;}
+::-moz-selection {background:#D6CEBF; color:#FFF;}
+
+/* 單行文字超出範圍出現... */
+.sampleOverflow{white-space: nowrap; overflow: hidden; text-overflow : ellipsis;}
+/* 多行文字超出範圍出現...不能設height, padding */
+.sampleOverflowMultiLine{ display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp:2; overflow: hidden; text-overflow: ellipsis;}
+
+/* scrollbar隱藏 */
+.sampleHiddenScroll{height: 300px; overflow: -moz-scrollbars-none; overflow-y: auto; overflow-x:none;}
+.sampleHiddenScroll::-webkit-scrollbar { width: 0 !important; height: 0 !important; }
+
+/* 預設輸入文字，placeholder需要個別設定樣式否則無效 */
+::placeholder{ color: #9b9b9b; }
+::-webkit-input-placeholder { color: #9b9b9b;}
+:-moz-placeholder { color: #9b9b9b;}
+:-ms-input-placeholder { color: #9b9b9b;}
+
+/* 陰影 box-shadow: x y blur spread color inset */
+.sample-boxshadow{ box-shadow: 2px 2px 2px rgba(0,0,0,.4); }
+/* drop-shadow 可以反應出偽元素的形狀 */
+.sample-dropshadow {
+/*    -webkit-filter: drop-shadow(6px 6px 7px rgba(0, 0, 0, 0.7));*/
+    filter: drop-shadow(6px 6px 4px rgba(0, 0, 0, 0.4));
+}
+
+/* 背景透明模糊 */
+.sampleBGopacity { background-color: rgba(255,255,255,.7); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);}
+
+/* 文字遮罩 */
+.sampleTextMask{ font-weight: 900; background-image: var(--gradient01); -webkit-background-clip: text; -webkit-text-fill-color: transparent; -webkit-box-decoration-break: clone;}
+/* 漸層 http://www.colorzilla.com/gradient-editor/ */

@@ -1,0 +1,267 @@
+local_backend:
+  url: "http://localhost:8081/api/v1"
+
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/projects"
+public_folder: "../images/projects"
+
+collections:
+  - name: "logo-design"
+    label: "🎨 Logo Design 作品"
+    folder: "data/projects/logo-design"
+    create: true
+    extension: "json"
+    format: "json"
+    slug: "{{fields.id}}"
+    summary: "{{order}} — {{title}} {{year}}"
+    sortable_fields: ["order", "title", "year"]
+    fields:
+      - {
+          label: "作品唯一ID (網址用，例如 a-onmyway, i-mom)",
+          name: "id",
+          widget: "string",
+        }
+      - { label: "作品名稱", name: "title", widget: "string" }
+      - { label: "年份", name: "year", widget: "string" }
+      - {
+          label: "分類",
+          name: "category",
+          widget: "hidden",
+          default: "logo-design",
+        }
+      - &common_subtitle {
+          label: "副標題 / 額外說明文字（選填）",
+          name: "subtitle",
+          widget: "text",
+          required: false,
+          hint: "可不填。會顯示在分類標籤旁的補充說明文字。",
+        }
+      - &common_desc {
+          label: "作品簡介",
+          name: "description",
+          widget: "text",
+          required: false,
+        }
+      - &common_desc_align {
+          label: "作品簡介對齊方式",
+          name: "desc_align",
+          widget: "select",
+          options:
+            [
+              { label: "置左 (預設)", value: "left" },
+              { label: "置中", value: "center" },
+              { label: "置右", value: "right" },
+            ],
+          default: "left",
+          required: false,
+        }
+      - &common_order {
+          label: "排列順序",
+          name: "order",
+          widget: "number",
+          default: 99,
+          value_type: "int",
+          min: 1,
+          max: 999,
+          hint: "數字越小越前面。1 = 最前面，99 = 最後面。同分類內依此排序。",
+        }
+      - &common_featured {
+          label: "放在首頁精選",
+          name: "featured",
+          widget: "boolean",
+          default: false,
+          required: false,
+          hint: "開啟後這個作品會出現在首頁的 Selected Works 區塊，不開啟則不顯示",
+        }
+      - &common_featured_all {
+          label: "精選放在 All Works 最上方",
+          name: "featured_all",
+          widget: "boolean",
+          default: false,
+          required: false,
+          hint: "開啟後這個作品會出現在 Projects 頁面 All Works 最上方",
+        }
+      - &common_cover {
+          label: "列表封面圖",
+          name: "cover_image",
+          widget: "image",
+        }
+      - &common_cover_align {
+          label: "封面圖對齊與大小",
+          name: "cover_align",
+          widget: "select",
+          options:
+            [
+              { label: "滿版 (預設)", value: "full" },
+              { label: "置左", value: "left" },
+              { label: "置中", value: "center" },
+              { label: "置右", value: "right" },
+            ],
+          default: "full",
+          required: false,
+        }
+      - &common_blocks
+        label: "內容頁排版（可自由新增、點選上下箭頭排序）"
+        name: "page_blocks"
+        widget: "list"
+        types:
+          - label: "🖼️ 影像（單張大圖）"
+            name: "image_block"
+            widget: "object"
+            fields:
+              - { label: "上傳圖片", name: "image", widget: "image" }
+          - label: "✍️ 文字區塊"
+            name: "text_block"
+            widget: "object"
+            fields:
+              - { label: "內文", name: "text", widget: "text" }
+          - label: "🔲 雙圖並排區塊"
+            name: "two_images_block"
+            widget: "object"
+            fields:
+              - { label: "左邊圖片", name: "image_left", widget: "image" }
+              - { label: "右邊圖片", name: "image_right", widget: "image" }
+          - label: "🔳 三圖並排區塊"
+            name: "three_images_block"
+            widget: "object"
+            fields:
+              - { label: "左邊圖片", name: "image_left", widget: "image" }
+              - { label: "中間圖片", name: "image_center", widget: "image" }
+              - { label: "右邊圖片", name: "image_right", widget: "image" }
+          - label: "🎥 視訊與音訊（YouTube / 影片）"
+            name: "video_block"
+            widget: "object"
+            fields:
+              - {
+                  label: "YouTube 影片網址 (或影片檔案路徑)",
+                  name: "video_url",
+                  widget: "string",
+                  hint: "例如: https://www.youtube.com/embed/xxxxxx 或直接填入上傳的影片路徑",
+                }
+          - label: "🔗 嵌入區塊 (Figma 原型 / 外部 3D / 程式碼)"
+            name: "embed_block"
+            widget: "object"
+            fields:
+              - {
+                  label: "網頁嵌入程式碼 (iframe) 或 網址",
+                  name: "embed_code",
+                  widget: "text",
+                  hint: "可以複製 Figma / Sketchfab 的 Embed iframe 程式碼貼進來",
+                }
+          - label: "📎 附加資產（下載項目按鈕）"
+            name: "download_block"
+            widget: "object"
+            fields:
+              - {
+                  label: "按鈕文字",
+                  name: "button_text",
+                  widget: "string",
+                  default: "下載專案附加資產 (Zip/PDF)",
+                }
+              - {
+                  label: "上傳檔案 / 或是填寫外部下載連結",
+                  name: "file_url",
+                  widget: "file",
+                }
+
+  - name: "web-design"
+    label: "💻 Web Design 作品"
+    folder: "data/projects/web-design"
+    create: true
+    extension: "json"
+    format: "json"
+    slug: "{{fields.id}}"
+    summary: "{{order}} — {{title}} {{year}}"
+    sortable_fields: ["order", "title", "year"]
+    fields:
+      - {
+          label: "作品唯一ID (網址用，例如 a-onmyway, i-mom)",
+          name: "id",
+          widget: "string",
+        }
+      - { label: "作品名稱", name: "title", widget: "string" }
+      - { label: "年份", name: "year", widget: "string" }
+      - {
+          label: "分類",
+          name: "category",
+          widget: "hidden",
+          default: "web-design",
+        }
+      - *common_subtitle
+      - *common_desc
+      - *common_desc_align
+      - *common_order
+      - *common_featured
+      - *common_featured_all
+      - *common_cover
+      - *common_cover_align
+      - *common_blocks
+
+  - name: "illustration"
+    label: "🎨 Illustration 作品"
+    folder: "data/projects/illustration"
+    create: true
+    extension: "json"
+    format: "json"
+    slug: "{{fields.id}}"
+    summary: "{{order}} — {{title}} {{year}}"
+    sortable_fields: ["order", "title", "year"]
+    fields:
+      - {
+          label: "作品唯一ID (網址用，例如 a-onmyway, i-mom)",
+          name: "id",
+          widget: "string",
+        }
+      - { label: "作品名稱", name: "title", widget: "string" }
+      - { label: "年份", name: "year", widget: "string" }
+      - {
+          label: "分類",
+          name: "category",
+          widget: "hidden",
+          default: "illustration",
+        }
+      - *common_subtitle
+      - *common_desc
+      - *common_desc_align
+      - *common_order
+      - *common_featured
+      - *common_featured_all
+      - *common_cover
+      - *common_cover_align
+      - *common_blocks
+
+  - name: "animation"
+    label: "🎬 Animation 作品"
+    folder: "data/projects/animation"
+    create: true
+    extension: "json"
+    format: "json"
+    slug: "{{fields.id}}"
+    summary: "{{order}} — {{title}} {{year}}"
+    sortable_fields: ["order", "title", "year"]
+    fields:
+      - {
+          label: "作品唯一ID (網址用，例如 a-onmyway, i-mom)",
+          name: "id",
+          widget: "string",
+        }
+      - { label: "作品名稱", name: "title", widget: "string" }
+      - { label: "年份", name: "year", widget: "string" }
+      - {
+          label: "分類",
+          name: "category",
+          widget: "hidden",
+          default: "animation",
+        }
+      - *common_subtitle
+      - *common_desc
+      - *common_desc_align
+      - *common_order
+      - *common_featured
+      - *common_featured_all
+      - *common_cover
+      - *common_cover_align
+      - *common_blocks

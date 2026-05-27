@@ -1,0 +1,13 @@
+{
+  "name": "jm-portfolio",
+  "version": "1.0.0",
+  "description": "JM Portfolio Website",
+  "scripts": {
+    "cms":  "node start-cms.js",
+    "sync": "node sync.js",
+    "start": "node start-cms.js"
+  },
+  "devDependencies": {
+    "decap-server": "^3.0.0"
+  }
+}

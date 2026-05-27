@@ -1,0 +1,54 @@
+<div class="container">
+	<div class="group">
+		<a class="logo" href="../index.htm"></a>
+		<a class="mobilemenu"><b></b><span>Menu</span></a>
+	</div>
+	<nav>
+		<dl class="mobile">
+			<dt><a href="../index.htm" class="logo"></a></dt>
+			<dt><a class="mobilemenu"><span>Menu</span><b></b></a></dt>
+		</dl>
+		<dl>
+			<dt><a href="../projects/index.htm">Projects</a></dt>
+			<dd></dd>
+		</dl>
+		<dl>
+			<dt><a href="../about/index.htm">About</a></dt>
+			<dd></dd>
+		</dl>
+		<dl>
+			<dt><a href="../contact/index.htm">Contact</a></dt>
+			<dd></dd>
+		</dl>
+	</nav>
+</div>
+<script>
+    $(function(){
+        toggleme($('a.mobilemenu'),$('body'),'MobileMenuOn');
+		
+		// 動態替換相對路徑以配合頁面深度 (支援 PATH_PREFIX)
+		var prefix = (typeof window.PATH_PREFIX !== 'undefined') ? window.PATH_PREFIX : '../';
+		
+		// 如果是首頁 (.index) 且沒設 PATH_PREFIX，自動改為 ""
+		if ($("header").hasClass("index") || $("footer").hasClass("index")) {
+			if (typeof window.PATH_PREFIX === 'undefined') {
+				prefix = "";
+			}
+		}
+
+		$("header a[href^='../']").attr("href", function(_, oldHref) {
+			return oldHref.replace(/^\.\.\//, prefix);
+		});
+		$("footer a[href^='../']").attr("href", function(_, oldHref) {
+			return oldHref.replace(/^\.\.\//, prefix);
+		});
+		$("footer img[src^='../']").attr("src", function(_, oldSrc) {
+			return oldSrc.replace(/^\.\.\//, prefix);
+		});
+		
+		//wheelchange
+		var s1 = 100;
+		var newSet=[[s1,'scroll']];
+		wheelchange($('.bodybox'), newSet);
+    });
+</script>
