@@ -326,7 +326,7 @@ body.dark-mode #detailDesc { color: var(--pri01); }
 .sectionItem { margin-bottom: 45px;}
 
 /* ✍️ 文字積木：支援換行、字體適中 */
-.sectionText .bodyText { font-size: var(--fsS);color: var(--pri04);line-height: 1.8;letter-spacing: 0.3px;}
+.sectionText .bodyText { font-size: var(--fsS);font-family: var(--fontSans); color: var(--pri04);line-height: 1.8;letter-spacing: 0.3px;}
 .sectionText.align-left .bodyText { text-align: left; }
 .sectionText.align-center .bodyText { text-align: center; }
 .sectionText.align-right .bodyText { text-align: right; }
