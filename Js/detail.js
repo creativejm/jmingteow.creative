@@ -92,8 +92,7 @@ $(function () {
         var subtitle  = project.subtitle ? '<span style="margin-left:6px;">' + project.subtitle + '</span>' : '';
         $('#detailMeta').html(
             '<div><b>Services:</b><span>' + category + subtitle + '</span></div>' +
-            '<div><b>Year:</b><span>' + (project.year   || '') + '</span></div>' +
-            (project.role ? '<div><b>Role:</b><span>' + project.role + '</span></div>' : '')
+            '<div><b>Year:</b><span>' + (project.year   || '') + '</span></div>'
         );
 
         // 3. 簡介
@@ -258,8 +257,8 @@ $(function () {
             currentItemIdx = ids.indexOf(currentId);
         }
 
-        var prevItem = currentItemIdx > 0 ? items[currentItemIdx - 1] : null;
-        var nextItem = currentItemIdx < items.length - 1 ? items[currentItemIdx + 1] : null;
+        var prevItem = items[(currentItemIdx - 1 + items.length) % items.length];
+        var nextItem = items[(currentItemIdx + 1) % items.length];
 
         var $wrapper = $('.project-detail-wrapper');
         if (!$wrapper.length) return;
