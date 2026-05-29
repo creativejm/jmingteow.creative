@@ -1,0 +1,15 @@
+{
+  "featured": false,
+  "order": 99,
+  "featured_all": true,
+  "cover_image": "../Images/projects/jy.jpg",
+  "desc_align": "left",
+  "subtitle": "",
+  "cover_crop": "cover-center",
+  "title": "Jian Yuan",
+  "id": "jianyuan",
+  "description": "LOGO",
+  "year": "2024",
+  "cover_align": "contain",
+  "category": "logo"
+}

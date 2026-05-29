@@ -1,8 +1,8 @@
 {
   "featured": false,
-  "order": 99,
+  "order": 3,
   "featured_all": false,
-  "cover_image": "https://i.pinimg.com/1200x/f9/9e/53/f99e5325cb5c21f23c1910756eecdf76.jpg",
+  "cover_image": "../Images/projects/nos.jpg",
   "desc_align": "left",
   "title": "Nostalgia",
   "id": "nostalgia",

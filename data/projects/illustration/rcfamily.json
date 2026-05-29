@@ -2,7 +2,7 @@
   "featured": false,
   "order": 99,
   "featured_all": false,
-  "cover_image": "https://i.pinimg.com/736x/12/62/0d/12620d7c595fd0cbe662ab2889f4606b.jpg",
+  "cover_image": "../Images/projects/rfam.png",
   "desc_align": "left",
   "title": "RC Family",
   "id": "rcfamily",

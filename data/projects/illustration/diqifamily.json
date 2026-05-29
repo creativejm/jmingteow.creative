@@ -2,8 +2,15 @@
   "featured": false,
   "order": 99,
   "featured_all": false,
-  "cover_image": "https://i.pinimg.com/736x/46/07/9c/46079cd7769da069c41df37a8a4e61e8.jpg",
+  "cover_image": "../Images/projects/qfam.png",
+  "page_blocks": [
+    {
+      "type": "image_block",
+      "image": "../Images/projects/螢幕擷取畫面-2026-05-27-174937.png"
+    }
+  ],
   "desc_align": "left",
+  "cover_crop": "contain-center",
   "title": "DQ Family",
   "id": "diqifamily",
   "year": "2023",

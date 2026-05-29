@@ -1,9 +1,15 @@
 {
+  "show_cover_in_detail": true,
   "featured": false,
   "order": 1,
   "featured_all": true,
-  "cover_image": "https://i.pinimg.com/1200x/f2/e6/bc/f2e6bcab9c064fb4972f70656e09ed65.jpg",
-  "page_blocks": [],
+  "cover_image": "../Images/projects/mr.jpg",
+  "page_blocks": [
+    {
+      "type": "text_block",
+      "text": "[咖啡](https://www.mrbrown.com.tw/index.aspx)"
+    }
+  ],
   "desc_align": "left",
   "title": "Mr.brown",
   "id": "mrbrown",

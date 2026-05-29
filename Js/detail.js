@@ -17,15 +17,37 @@ $(function () {
         return;
     }
 
+    var categoryMap = {};
+    var projectsList = [];
     var folderNames = ['logo-design', 'web-design', 'illustration', 'animation'];
 
-    // ── 優先嘗試讀取 ROOT 目錄下的 JSON（新版，無分類資料夾），失敗則嘗試子資料夾 ──
-    var mainUrl = prefix + 'data/projects/' + projectId + '.json?_t=' + new Date().getTime();
-    $.getJSON(mainUrl, function (project) {
-        renderPage(project, project.category || 'logo-design');
+    // ── 先讀取 projects.json 取得動態分類與作品清單 ──
+    var listUrl = prefix + 'data/projects.json?_t=' + new Date().getTime();
+    $.getJSON(listUrl, function (data) {
+        var categoriesConfig = (data && data.categories) || [];
+        projectsList = (data && data.projects) || [];
+        
+        if (categoriesConfig.length > 0) {
+            folderNames = categoriesConfig.map(function(c) { return c.id; });
+            categoriesConfig.forEach(function(c) {
+                categoryMap[c.id] = c.name;
+            });
+        }
+        
+        startLoadingProject();
     }).fail(function () {
-        tryNextFolder(0);
+        console.warn('[作品詳細] ⚠️ 無法載入 projects.json，使用靜態預設分類。');
+        startLoadingProject();
     });
+
+    function startLoadingProject() {
+        var mainUrl = prefix + 'data/projects/' + projectId + '.json?_t=' + new Date().getTime();
+        $.getJSON(mainUrl, function (project) {
+            renderPage(project, project.category || 'logo-design');
+        }).fail(function () {
+            tryNextFolder(0);
+        });
+    }
 
     function tryNextFolder(index) {
         if (index >= folderNames.length) {
@@ -65,12 +87,13 @@ $(function () {
         $('#detailTitle').text(project.title || '');
 
         // 2. meta-info：分類 / 年份 / 客戶
-        var category = toDisplayName(project.category || folder);
+        var rawCategory = project.category || folder;
+        var category = categoryMap[rawCategory] || toDisplayName(rawCategory);
         var subtitle  = project.subtitle ? '<span style="margin-left:6px;">' + project.subtitle + '</span>' : '';
         $('#detailMeta').html(
             '<div><b>Services:</b><span>' + category + subtitle + '</span></div>' +
             '<div><b>Year:</b><span>' + (project.year   || '') + '</span></div>' +
-            (project.role ? '<div><b>Role：</b><span>' + project.role + '</span></div>' : '')
+            (project.role ? '<div><b>Role:</b><span>' + project.role + '</span></div>' : '')
         );
 
         // 3. 簡介
@@ -88,57 +111,59 @@ $(function () {
             $desc.hide();
         }
 
-        // 4. 封面圖（在簡介下方）
+        // 4. 根據使用者設定，決定是否在內容頁上方顯示列表封面圖
         var cover = fixPath(project.cover_image);
-        var showBody = function() {
-            $('body').css('opacity', 1);
-        };
-        if (cover) {
+        if (project.show_cover_in_detail === true && cover) {
             var $img = $('#detailCoverImg');
             $img.attr('src', cover).attr('alt', project.title).show();
-            $img.removeClass('align-left align-center align-right align-full');
+            
+            $img.removeClass('align-left align-center align-right align-contain align-full');
             if (project.cover_align) {
                 $img.addClass('align-' + project.cover_align);
             } else {
                 $img.addClass('align-full');
             }
-            // 監聽封面圖載入，完成後才淡入網頁，防大圖載入引起的版面跳動
-            if ($img[0].complete) {
-                showBody();
-            } else {
-                $img.on('load error', function() {
-                    showBody();
-                });
-            }
         } else {
             $('#detailCoverImg').hide();
-            showBody();
         }
+
+        var showBody = function() {
+            $('body').css('opacity', 1);
+        };
+        showBody();
 
         // 5. 動態積木內容
         var $sections = $('#detailSections');
         $sections.empty();
 
-        if (!project.page_blocks || !Array.isArray(project.page_blocks)) return;
-
-        project.page_blocks.forEach(function (block) {
-            if (!block) return;
+        if (project.page_blocks && Array.isArray(project.page_blocks)) {
+            project.page_blocks.forEach(function (block) {
+                if (!block) return;
 
             // 單張大圖
             if (block.type === 'image_block' && block.image) {
+                var alignClass = block.align ? ' align-' + block.align : ' align-full';
                 $sections.append(
-                    '<div class="sectionItem sectionImage">' +
+                    '<div class="sectionItem sectionImage' + alignClass + '">' +
                         '<img src="' + fixPath(block.image) + '" alt="Project Image" />' +
                     '</div>'
                 );
 
             // 文字區塊
             } else if (block.type === 'text_block' && block.text) {
-                $sections.append(
-                    '<div class="sectionItem sectionText">' +
-                        '<p class="bodyText">' + block.text + '</p>' +
-                    '</div>'
-                );
+                // 將 Markdown 格式字串轉換為 HTML
+                var parsedText = block.text
+                    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                    .replace(/\*(.*?)\*/g, '<i>$1</i>')
+                    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" style="text-decoration:underline;color:inherit;">$1</a>')
+                    .replace(/\n/g, '<br>');
+                
+                var textAlignClass = block.align ? ' align-' + block.align : ' align-left';
+                var $textWrap = $('<div class="sectionItem sectionText' + textAlignClass + '"></div>');
+                var $textBody = $('<div class="bodyText"></div>');
+                $textBody.html(parsedText);
+                $textWrap.append($textBody);
+                $sections.append($textWrap);
 
             // 雙圖並排
             } else if (block.type === 'two_images_block') {
@@ -203,54 +228,70 @@ $(function () {
                 );
             }
         });
+        }
+        // 在載入並呈現內容後設定 prev/next
+        setupPrevNext(projectId);
     }
 
     // ── 增加 Previous / Next 連結功能，動態插入到 detail 頁底部 ──
     function setupPrevNext(currentId) {
-        var listUrl = prefix + 'data/projects.json?_t=' + new Date().getTime();
-        $.getJSON(listUrl, function (data) {
-            var items = (data && data.projects) || [];
+        var items = projectsList;
+        
+        // 找出目前的分類資料夾
+        var currentFolder = '';
+        var pathParts = window.location.pathname.split('/');
+        if (pathParts.length >= 2) {
+            currentFolder = pathParts[pathParts.length - 2]; // 例如 "illustration"
+        }
+
+        // 尋找符合 miniature ID 與目前分類資料夾的索引
+        var currentItemIdx = -1;
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].id === currentId && items[i].folder === currentFolder) {
+                currentItemIdx = i;
+                break;
+            }
+        }
+        if (currentItemIdx === -1) {
+            // 回退：僅依 ID 尋找
             var ids = items.map(function (p) { return p.id; });
-            var idx = ids.indexOf(currentId);
-            if (idx === -1) return;
+            currentItemIdx = ids.indexOf(currentId);
+        }
 
-            var prevId = idx > 0 ? ids[idx - 1] : null;
-            var nextId = idx < ids.length - 1 ? ids[idx + 1] : null;
+        var prevItem = currentItemIdx > 0 ? items[currentItemIdx - 1] : null;
+        var nextItem = currentItemIdx < items.length - 1 ? items[currentItemIdx + 1] : null;
 
-            var $wrapper = $('.project-detail-wrapper');
-            if (!$wrapper.length) return;
+        var $wrapper = $('.project-detail-wrapper');
+        if (!$wrapper.length) return;
 
-            var $nav = $wrapper.find('.project-nav');
-            if (!$nav.length) {
-                $nav = $('<div/>', { 'class': 'project-nav' });
-                $wrapper.append($nav);
+        var $nav = $wrapper.find('.project-nav');
+        if (!$nav.length) {
+            $nav = $('<div/>', { 'class': 'project-nav' });
+            $wrapper.append($nav);
+        }
+        $nav.empty();
+
+        function detailHrefFor(item) {
+            if (!item) return '#';
+            var path = window.location.pathname || '';
+            // 如果目前是在 /projects/ 目錄下的個別作品頁（但排除 fallback 用的 detail.html 及 index.html）
+            if ((path.indexOf('/projects/') !== -1 || path.indexOf('\\projects\\') !== -1) && 
+                path.indexOf('detail.html') === -1 && 
+                path.indexOf('index.html') === -1) {
+                return '../' + item.folder + '/' + item.id + '.html';
             }
-            $nav.empty();
+            return prefix + 'projects/' + item.folder + '/' + item.id + '.html';
+        }
 
-            function detailHrefFor(id) {
-                var path = window.location.pathname || '';
-                // 如果目前是在 /projects/ 目錄下的個別作品頁（但排除 fallback 用的 detail.html 及 index.html）
-                if ((path.indexOf('/projects/') !== -1 || path.indexOf('\\projects\\') !== -1) && 
-                    path.indexOf('detail.html') === -1 && 
-                    path.indexOf('index.html') === -1) {
-                    return id + '.html';
-                }
-                return prefix + 'projects/' + id + '.html';
-            }
-
-            if (prevId) {
-                $nav.append($('<a/>', { 'class': 'UI longnext prev', href: detailHrefFor(prevId) }));
-            }
-            
-            // 中間加入 Back 鏈接
-            $nav.append($('<a/>', { 'class': 'back', href: 'javascript:history.back()', text: 'Back' }));
-            
-            if (nextId) {
-                $nav.append($('<a/>', { 'class': 'UI longnext', href: detailHrefFor(nextId) }));
-            }
-        });
+        if (prevItem) {
+            $nav.append($('<a/>', { 'class': 'UI longnext prev', href: detailHrefFor(prevItem) }));
+        }
+        
+        // 中間加入 Back 鏈接
+        $nav.append($('<a/>', { 'class': 'back', href: 'javascript:history.back()', text: 'Back' }));
+        
+        if (nextItem) {
+            $nav.append($('<a/>', { 'class': 'UI longnext', href: detailHrefFor(nextItem) }));
+        }
     }
-
-    // 在載入並呈現內容後設定 prev/next
-    setupPrevNext(projectId);
 });

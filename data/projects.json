@@ -1,47 +1,25 @@
 {
+  "categories": [
+    {
+      "id": "logo",
+      "name": "Logo"
+    },
+    {
+      "id": "web-design",
+      "name": "Web Design"
+    },
+    {
+      "id": "illustration",
+      "name": "Illustration"
+    },
+    {
+      "id": "animation",
+      "name": "Animation"
+    }
+  ],
   "projects": [
     {
-      "id": "jianyuan",
-      "folder": "logo-design"
-    },
-    {
-      "id": "project-001",
-      "folder": "logo-design"
-    },
-    {
-      "id": "veggiebowl",
-      "folder": "logo-design"
-    },
-    {
-      "id": "aliakaodanmuthu",
-      "folder": "logo-design"
-    },
-    {
-      "id": "jming",
-      "folder": "logo-design"
-    },
-    {
-      "id": "newone",
-      "folder": "logo-design"
-    },
-    {
-      "id": "mrbrown",
-      "folder": "web-design"
-    },
-    {
-      "id": "moniecetea",
-      "folder": "web-design"
-    },
-    {
       "id": "Mercuries Life Insurance",
-      "folder": "web-design"
-    },
-    {
-      "id": "wixtar",
-      "folder": "web-design"
-    },
-    {
-      "id": "click",
       "folder": "web-design"
     },
     {
@@ -49,7 +27,19 @@
       "folder": "web-design"
     },
     {
-      "id": "hometown",
+      "id": "moniecetea",
+      "folder": "web-design"
+    },
+    {
+      "id": "mrbrown",
+      "folder": "web-design"
+    },
+    {
+      "id": "wixtar",
+      "folder": "web-design"
+    },
+    {
+      "id": "beforesunset",
       "folder": "illustration"
     },
     {
@@ -57,19 +47,23 @@
       "folder": "illustration"
     },
     {
-      "id": "rcfamily",
-      "folder": "illustration"
-    },
-    {
       "id": "gigifamily",
       "folder": "illustration"
     },
     {
-      "id": "beforesunset",
+      "id": "hometown",
       "folder": "illustration"
     },
     {
-      "id": "onmyway",
+      "id": "rcfamily",
+      "folder": "illustration"
+    },
+    {
+      "id": "beforesunset",
+      "folder": "animation"
+    },
+    {
+      "id": "hometown",
       "folder": "animation"
     },
     {
@@ -79,6 +73,34 @@
     {
       "id": "nostalgia",
       "folder": "animation"
+    },
+    {
+      "id": "onmyway",
+      "folder": "animation"
+    },
+    {
+      "id": "aliakaodanmuthu",
+      "folder": "logo"
+    },
+    {
+      "id": "jianyuan",
+      "folder": "logo"
+    },
+    {
+      "id": "jming",
+      "folder": "logo"
+    },
+    {
+      "id": "newone",
+      "folder": "logo"
+    },
+    {
+      "id": "thehealinghouse",
+      "folder": "logo"
+    },
+    {
+      "id": "veggiebowl",
+      "folder": "logo"
     }
   ]
 }

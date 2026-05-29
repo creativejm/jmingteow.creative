@@ -2,7 +2,7 @@
   "featured": false,
   "order": 99,
   "featured_all": false,
-  "cover_image": "https://i.pinimg.com/736x/16/6e/44/166e44d5f4fb49b3945f76feea0f6623.jpg",
+  "cover_image": "../Images/projects/gfam.png",
   "desc_align": "left",
   "title": "Gi Family",
   "id": "gigifamily",

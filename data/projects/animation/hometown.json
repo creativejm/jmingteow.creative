@@ -1,8 +1,15 @@
 {
   "client": "現在",
-  "featured": false,
+  "featured": true,
   "order": 2,
-  "cover_image": "../Images/projects/animation.png",
+  "featured_all": false,
+  "cover_image": "../Images/projects/hometown.jpg",
+  "page_blocks": [
+    {
+      "type": "video_block",
+      "video_url": "https://youtu.be/6PiaRtLm5z8?si=76kCjwO-0ybSZUqm"
+    }
+  ],
   "subtitle": "",
   "title": "Hometown",
   "id": "hometown",

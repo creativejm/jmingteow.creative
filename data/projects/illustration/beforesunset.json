@@ -1,10 +1,13 @@
 {
-  "id": "beforesunset",
-  "title": "Before Sunset",
-  "year": "2023",
+  "show_cover_in_detail": true,
   "client": "try",
-  "category": "illustration",
-  "cover_image": "../Images/projects/design.png",
   "featured": true,
-  "order": 3
+  "order": 3,
+  "featured_all": false,
+  "cover_image": "../Images/projects/beforesunset.png",
+  "cover_crop": "cover-bottom",
+  "title": "Before Sunset",
+  "id": "beforesunset",
+  "year": "2023",
+  "category": "illustration"
 }

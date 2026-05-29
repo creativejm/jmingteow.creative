@@ -2,13 +2,20 @@
   "featured": false,
   "order": 5,
   "featured_all": false,
-  "cover_image": "https://i.pinimg.com/736x/fd/df/19/fddf1929a085be740dcfcb07350ccd2f.jpg",
-  "desc_align": "left",
+  "cover_image": "../Images/projects/imfine.png",
+  "page_blocks": [
+    {
+      "type": "video_block",
+      "video_url": "https://youtu.be/EMMuIx_aPzA?si=5Gz7gHpXMbtO0Ebd"
+    }
+  ],
+  "desc_align": "center",
   "subtitle": "",
+  "cover_crop": "contain-center",
   "title": "I'm Fine",
   "id": "imfine",
   "description": "",
   "year": "2020",
-  "cover_align": "left",
+  "cover_align": "center",
   "category": "animation"
 }

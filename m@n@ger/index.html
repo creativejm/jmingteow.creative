@@ -1,12 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW" translate="no" class="notranslate">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>作品集管理後台</title>
-  <link rel="cms-config-url" type="text/yaml" href="config.yml" />
+  <script>
+    window.CMS_MANUAL_INIT = true;
+
+    // 防止 Chrome 翻譯等第三方 DOM 修改導致 React 崩潰
+    (function() {
+      var originalRemoveChild = Node.prototype.removeChild;
+      Node.prototype.removeChild = function(child) {
+        if (child.parentNode !== this) {
+          if (window.console) console.warn("Prevented removeChild error on parent mismatch:", child);
+          return child;
+        }
+        return originalRemoveChild.apply(this, arguments);
+      };
+      var originalInsertBefore = Node.prototype.insertBefore;
+      Node.prototype.insertBefore = function(newNode, referenceNode) {
+        if (referenceNode && referenceNode.parentNode !== this) {
+          if (window.console) console.warn("Prevented insertBefore error on parent mismatch:", newNode);
+          return newNode;
+        }
+        return originalInsertBefore.apply(this, arguments);
+      };
+    })();
+  </script>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    /* 後台欄位分組顏色標示 */
+
+    /* 黃色組：作品簡介 + 對齊 */
+    [class*="ControlContainer"]:has(label[for*="description"]),
+    [class*="ControlContainer"]:has(label[for*="desc_align"]) {
+      border-left: 3px solid #d4a017;
+      padding-left: 12px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* 褐色組：精選 All Projects + 首頁精選 */
+    [class*="ControlContainer"]:has(label[for*="featured_all"]),
+    [class*="ControlContainer"]:has(label[for*="featured"]:not([for*="featured_all"])) {
+      border-left: 3px solid #8b6f47;
+      padding-left: 12px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* 藍色組：封面圖 + 封面圖對齊與裁切 */
+    [class*="ControlContainer"]:has(label[for*="cover"]) {
+      border-left: 3px solid #4a90b8;
+      padding-left: 12px;
+      border-radius: 0 4px 4px 0;
+    }
+  </style>
 </head>
 
 <body>
@@ -46,7 +94,23 @@
 
         var title = entry.getIn(['data', 'title']) || '未命名作品';
         var year = entry.getIn(['data', 'year']) || '';
-        var category = entry.getIn(['data', 'category']) || '';
+        var categoryId = entry.getIn(['data', 'category']) || '';
+        var displayCategory = categoryId;
+        if (window.CATEGORIES_LIST) {
+          for (var i = 0; i < window.CATEGORIES_LIST.length; i++) {
+            if (window.CATEGORIES_LIST[i].id === categoryId) {
+              displayCategory = window.CATEGORIES_LIST[i].name;
+              break;
+            }
+          }
+        }
+        if (displayCategory === categoryId && categoryId) {
+          displayCategory = categoryId
+            .split(/[-\s]+/)
+            .map(function (w) { return w.charAt(0).toUpperCase() + w.slice(1); })
+            .join(' ');
+        }
+
         var subtitle = entry.getIn(['data', 'subtitle']) || '';
         var description = entry.getIn(['data', 'description']) || '';
         var role = entry.getIn(['data', 'role']) || '';
@@ -87,13 +151,20 @@
         }
 
         var subtitleTag = subtitle ? '&nbsp;<span style="margin-left:6px;">' + subtitle + '</span>' : '';
-        var metaHTML = '<div class="meta-info"><div><b>Services:</b><span>' + category + subtitleTag + '</span></div><div><b>Year:</b><span>' + year + '</span></div>' + (role ? '<div><b>Role:</b><span>' + role + '</span></div>' : '') + '</div>';
+        var metaHTML = '<div class="meta-info"><div><b>Services:</b><span>' + displayCategory + subtitleTag + '</span></div><div><b>Year:</b><span>' + year + '</span></div>' + (role ? '<div><b>Role:</b><span>' + role + '</span></div>' : '') + '</div>';
         
         var descHTML = (description && description.trim() !== '') 
             ? '<p id="detailDesc" class="align-' + descAlign + '">' + description + '</p>' 
             : '';
             
-        var coverHTML = coverImage ? '<img id="detailCoverImg" class="align-' + coverAlign + '" src="' + coverImage + '" alt="' + title + '" />' : '';
+        var coverStyle = 'style="object-fit: cover; height: auto; width: 100%;"';
+            
+        var showCoverInDetail = entry.getIn(['data', 'show_cover_in_detail']);
+        if (showCoverInDetail === false) { // if explicitly false
+          coverImage = ''; // Hide cover image in preview
+        }
+
+        var coverHTML = coverImage ? '<img id="detailCoverImg" class="align-' + coverAlign + '" src="' + coverImage + '" alt="' + title + '" ' + coverStyle + ' />' : '';
 
         return h('div', { className: 'project-detail-wrapper' },
           h('div', {
@@ -105,11 +176,347 @@
       }
     });
 
-    CMS.registerPreviewTemplate('logo-design', PreviewTemplate);
-    CMS.registerPreviewTemplate('web-design', PreviewTemplate);
-    CMS.registerPreviewTemplate('illustration', PreviewTemplate);
-    CMS.registerPreviewTemplate('animation', PreviewTemplate);
-    CMS.registerPreviewTemplate('photography', PreviewTemplate);
+    // ── 動態載入分類並初始化 Decap CMS ──
+    fetch('../data/categories.json?_t=' + new Date().getTime())
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        var categories = data.list || [];
+        window.CATEGORIES_LIST = categories;
+        
+        var collections = [
+          // 1. 新增分類的管理
+          {
+            name: "categories_config",
+            label: "➕ 新增分類 (Category)",
+            delete: false,
+            editor: { preview: false },
+            files: [
+              {
+                label: "分類設定",
+                name: "categories",
+                file: "data/categories.json",
+                format: "json",
+                extension: "json",
+                fields: [
+                  {
+                    label: "分類列表",
+                    name: "list",
+                    widget: "list",
+                    summary: "{{fields.name}} ({{fields.id}})",
+                    fields: [
+                      { label: "分類 ID (小寫英文連字號，如 logo-design)", name: "id", widget: "string" },
+                      { label: "顯示名稱 (中文/英文，如 Logo Design)", name: "name", widget: "string" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ];
+
+        // 2. 針對每個分類，動態生成一個作品管理 Collection
+        categories.forEach(function(cat) {
+          collections.push({
+            name: cat.id,
+            label: cat.name,
+            folder: "data/projects/" + cat.id,
+            create: true,
+            extension: "json",
+            format: "json",
+            slug: "{{fields.id}}",
+            summary: "{{order}} — {{title}} {{year}}",
+            sortable_fields: ["order", "title", "year"],
+            fields: [
+              {
+                label: "列表封面圖",
+                name: "cover_image",
+                widget: "image",
+              },
+              {
+                label: "封面圖裁切與對齊模式 (長方形封面裁剪)",
+                name: "cover_crop",
+                widget: "select",
+                options: [
+                  { label: "完整顯示 (預設 - 高度自適應)", value: "" },
+                  { label: "置中裁剪 (限高 550px)", value: "cover-center" },
+                  { label: "靠上裁剪 (限高 550px)", value: "cover-top" },
+                  { label: "靠下裁剪 (限高 550px)", value: "cover-bottom" },
+                  { label: "置中完整包含 (限高 550px - contain)", value: "contain-center" },
+                ],
+                default: "",
+                required: false,
+              },
+              {
+                label: "內容頁顯示列表封面圖",
+                name: "show_cover_in_detail",
+                widget: "boolean",
+                default: false,
+                required: false,
+                hint: "開啟時，這張封面圖也會顯示在進入作品內容頁的上方。",
+              },
+              {
+                label: "圖排版對齊 (內容頁) (optional)",
+                name: "cover_align",
+                widget: "select",
+                options: [
+                  { label: "滿版撐滿 (預設)", value: "full" },
+                  { label: "置中且保持原始寬度 (Contain)", value: "contain" },
+                  { label: "靠左對齊", value: "left" },
+                  { label: "靠右對齊", value: "right" },
+                  { label: "置中對齊", value: "center" }
+                ],
+                default: "full",
+                required: false,
+              },
+              {
+                label: "作品唯一ID (網址用，例如 hometown)",
+                name: "id",
+                widget: "string",
+              },
+              { label: "作品名稱", name: "title", widget: "string" },
+              {
+                label: "副標題 / 額外說明文字 (optional)",
+                name: "subtitle",
+                widget: "string",
+                required: false,
+                hint: "可不填。會顯示在分類標籤旁的補充說明文字。",
+              },
+              { label: "年份", name: "year", widget: "string" },
+              {
+                label: "排列順序",
+                name: "order",
+                widget: "number",
+                default: 99,
+                value_type: "int",
+                min: 1,
+                max: 999,
+                hint: "數字越小越前面。1 = 最前面，99 = 最後面。同分類內依此排序。",
+              },
+              {
+                label: "分類",
+                name: "category",
+                widget: "hidden",
+                default: cat.id,
+              },
+              {
+                label: "作品簡介",
+                name: "description",
+                widget: "text",
+                required: false,
+              },
+              {
+                label: "作品簡介對齊方式",
+                name: "desc_align",
+                widget: "select",
+                options: [
+                  { label: "置左 (預設)", value: "left" },
+                  { label: "置中", value: "center" },
+                  { label: "置右", value: "right" },
+                ],
+                default: "left",
+                required: false,
+              },
+              {
+                label: "放在首頁精選",
+                name: "featured",
+                widget: "boolean",
+                default: false,
+                required: false,
+                hint: "開啟後這個作品會出現在首頁的 Selected Works 區塊，不開啟則不顯示",
+              },
+              {
+                label: "精選放在 All Projects 最上方",
+                name: "featured_all",
+                widget: "boolean",
+                default: false,
+                required: false,
+                hint: "開啟後這個作品會出現在 Projects 頁面 All Projects 最上方",
+              },
+              {
+                label: "內容頁排版（可自由新增、點選上下箭頭排序）",
+                name: "page_blocks",
+                widget: "list",
+                types: [
+                  {
+                    label: "🖼️ 影像（單張大圖）",
+                    name: "image_block",
+                    widget: "object",
+                    fields: [
+                      { label: "上傳圖片", name: "image", widget: "image" },
+                      {
+                        label: "排版對齊 (大圖)",
+                        name: "align",
+                        widget: "select",
+                        options: [
+                          { label: "滿版撐滿 (預設)", value: "full" },
+                          { label: "置中且保持原始寬度 (Contain)", value: "contain" },
+                          { label: "靠左對齊", value: "left" },
+                          { label: "靠右對齊", value: "right" },
+                          { label: "置中對齊", value: "center" }
+                        ],
+                        default: "full",
+                        required: false
+                      }
+                    ]
+                  },
+                  {
+                    label: "✍️ 文字區塊",
+                    name: "text_block",
+                    widget: "object",
+                    fields: [
+                      { label: "內文 (支援連結、粗體等)", name: "text", widget: "markdown" },
+                      {
+                        label: "對齊",
+                        name: "align",
+                        widget: "select",
+                        options: [
+                          { label: "靠左 (預設)", value: "left" },
+                          { label: "置中", value: "center" },
+                          { label: "靠右", value: "right" }
+                        ],
+                        default: "left",
+                        required: false
+                      }
+                    ]
+                  },
+                  {
+                    label: "🔲 雙圖並排區塊",
+                    name: "two_images_block",
+                    widget: "object",
+                    fields: [
+                      { label: "左邊圖片", name: "image_left", widget: "image" },
+                      { label: "右邊圖片", name: "image_right", widget: "image" }
+                    ]
+                  },
+                  {
+                    label: "🔳 三圖並排區塊",
+                    name: "three_images_block",
+                    widget: "object",
+                    fields: [
+                      { label: "左邊圖片", name: "image_left", widget: "image" },
+                      { label: "中間圖片", name: "image_center", widget: "image" },
+                      { label: "右邊圖片", name: "image_right", widget: "image" }
+                    ]
+                  },
+                  {
+                    label: "🎥 視訊與音訊（YouTube / 影片）",
+                    name: "video_block",
+                    widget: "object",
+                    fields: [
+                      {
+                        label: "YouTube 影片網址 (或影片檔案路徑)",
+                        name: "video_url",
+                        widget: "string",
+                        hint: "例如: https://www.youtube.com/embed/xxxxxx 或直接填入上傳的影片路徑",
+                      }
+                    ]
+                  },
+                  {
+                    label: "🔗 嵌入區塊 (Figma 原型 / 外部 3D / 程式碼)",
+                    name: "embed_block",
+                    widget: "object",
+                    fields: [
+                      {
+                        label: "網頁嵌入程式碼 (iframe) 或 網址",
+                        name: "embed_code",
+                        widget: "text",
+                        hint: "可以複製 Figma / Sketchfab 的 Embed iframe 程式碼貼進來",
+                      }
+                    ]
+                  },
+                  {
+                    label: "📎 附加資產（下載項目按鈕）",
+                    name: "download_block",
+                    widget: "object",
+                    fields: [
+                      {
+                        label: "按鈕文字",
+                        name: "button_text",
+                        widget: "string",
+                        default: "下載專案附加資產 (Zip/PDF)",
+                      },
+                      {
+                        label: "上傳檔案 / 或是填寫外部下載連結",
+                        name: "file_url",
+                        widget: "file",
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          });
+        });
+
+        // 3. 手動初始化 Decap CMS
+        CMS.init({
+          config: {
+            local_backend: {
+              url: "http://localhost:8081/api/v1"
+            },
+            backend: {
+              name: "git-gateway",
+              branch: "main"
+            },
+            media_folder: "Images/projects",
+            public_folder: "../Images/projects",
+            collections: collections
+          }
+        });
+
+        // 4. 為每個作品 collection 註冊預覽模板
+        categories.forEach(function(cat) {
+          CMS.registerPreviewTemplate(cat.id, PreviewTemplate);
+        });
+
+        // 5. MutationObserver：動態為相關欄位組加上顏色色塊標示
+        (function() {
+          // 欄位 name 對應的顏色組設定
+          var fieldColors = [
+            { names: ['id', 'title', 'year', 'subtitle', 'order'], color: '#555555', label: '基本資訊' },
+            { names: ['description', 'desc_align'], color: '#d4a017', label: '作品簡介' },
+            { names: ['featured', 'featured_all'],  color: '#8b6f47', label: '精選' },
+            { names: ['cover_image', 'cover_align', 'cover_crop', 'show_cover_in_detail'], color: '#4a90b8', label: '封面圖' },
+          ];
+
+          function applyColors() {
+            // Decap CMS renders fields with [data-testid] or label text
+            var labels = document.querySelectorAll('label');
+            labels.forEach(function(label) {
+              var forAttr = label.htmlFor || label.getAttribute('for') || '';
+              var container = label.closest('[class*="ControlContainer"], [class*="Widget"], [class*="FormField"]')
+                           || label.parentElement;
+              if (!container || container.dataset.colorized) return;
+
+              for (var i = 0; i < fieldColors.length; i++) {
+                var group = fieldColors[i];
+                var matched = group.names.some(function(n) {
+                  return forAttr.endsWith(n) || forAttr.indexOf('.' + n) !== -1;
+                });
+                if (matched) {
+                  container.style.borderLeft = '3px solid ' + group.color;
+                  container.style.paddingLeft = '10px';
+                  container.style.borderRadius = '0 4px 4px 0';
+                  container.style.background = group.color + '08';
+                  container.dataset.colorized = '1';
+                  break;
+                }
+              }
+            });
+          }
+
+          // 監聽 DOM 變動（CMS 是 SPA，欄位是動態渲染的）
+          var observer = new MutationObserver(function() {
+            applyColors();
+          });
+          observer.observe(document.body, { childList: true, subtree: true });
+
+          // 也在載入後馬上跑一次
+          setTimeout(applyColors, 1500);
+          setTimeout(applyColors, 4000);
+        })();
+
+      });
   </script>
 </body>
 

@@ -1,0 +1,15 @@
+{
+  "client": "diqi",
+  "featured": true,
+  "order": 3,
+  "featured_all": true,
+  "cover_image": "../Images/projects/photography.png",
+  "page_blocks": [],
+  "desc_align": "center",
+  "title": "Taiwan Netshop",
+  "id": "newone",
+  "description": "Taiwan-based designer specializing in illustration and visual identity.\"\n（常駐台灣的設計師，專精於插畫與視覺識別。）\n\n為什麼好？ 用 \"Taiwan-based\" 開頭非常符合國際自由接案者（Freelancer）的標準寫法，專業感十足。\n\n2. 感性與專業兼具型（適合說故事的 About 區塊）\n保留了你「喜歡創作」的初心，但用更有質感的字眼包裝。\n\n\"A passionate designer and illustrator based in Taiwan, dedicated to bringing ideas to life through visual storytelling.\"\n（一位常駐台灣、充滿熱情的設計師與插畫家，致力於透過視覺故事將點子化為現實。）\n\n為什麼好？ 把 \"draw and design\" 升級成 \"designer and illustrator\"（設計師與插畫家），並用 \"visual storytelling\"（視覺故事）提升了作品的深度。",
+  "year": "2024",
+  "cover_align": "right",
+  "category": "logo"
+}

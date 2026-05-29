@@ -5,7 +5,7 @@
 @media screen and (max-height: 800px) {
 	/* NoteBook height */
 	.pageTitle .subtitle { font-size: var(--fsXS); }
-    .pageTitle { padding: 2rem 0 4rem 0;}
+    .pageTitle { padding: 2rem 0 3rem 0;}
     .projects-tabs .tab-list li { font-size: var(--fsXS); }
     .projects-tabs{ margin: 0 auto 3rem;}
     .bodybox.projects .subCategory h4.title{font-size:var(--fsS);}
@@ -36,7 +36,7 @@
 
 @media screen and (max-width: 1280px) {
     html, body { font-size: 12px; }
-    .pageTitle .title { font-size: var(--fsXL); }
+    .pageTitle .title { font-size: var(--fsXL); margin-bottom: 0;}
 }
 
 @media screen and (max-width: 1024px) {
@@ -100,7 +100,7 @@
     /* ----- Projects Page ----- */
     .bodybox.projects .subCategory h4.title{font-size:var(--fsP2);}
     .tag{font-size:var(--fsS);}
-    .index .pageTitle { text-align: center;padding: 1rem 0 2rem 0; }
+    .index .pageTitle { text-align: center;padding: 1rem 0 0 0; }
     .pageTitle { padding: 1rem 0 4rem 0;}
     .projects-tabs{ margin: 0 auto 4rem;}
 
@@ -108,7 +108,6 @@
     .projects-tabs .tab-list { justify-content: center; flex-wrap: wrap; overflow-x: visible; white-space: normal; gap: 1.5rem; }
     .projects-tabs .tab-list li { font-size: var(--fsS); padding: 8px 16px; flex: 0 0 auto; }
     
-    .bodybox.projects .works { padding: 20px 0 var(--padSection); }
     .bodybox.projects .subCategory { margin-bottom: 4rem; }
     .bodybox.projects .subCategory h3.title { font-size: var(--fsP); }
 
@@ -118,13 +117,15 @@
     .bodybox.about .intro .text,
     .bodybox.contact .info,
     .faq-list { width: 100%; }
-    .bodybox.contact .contactWrap {padding: 0;}
-    .bodybox.about .awards h2.title span{font-size: var(--fsP);}
+    .bodybox.about .awards h2.title span{font-size: var(--fsM);}
     
 
     .homepage-projects-section { padding: 6rem 0 4rem 0; }
     .homepage-projects-section .grid {  gap: 2rem;  }
     .homepage-projects-section .grid .card {flex: 0 0 280px; width: 280px;}
+
+
+    .bodybox.contact .info{gap: 3rem;}
 
 
     /* ----- Footer ----- */
@@ -145,7 +146,7 @@
     .btn-hero { width: 100%; max-width: 240px; }
     .hero-actions { flex-direction: column; align-items: center; }
     .privacyContent .block { padding: 30px 0; }
-    .clientGrid { grid-template-columns: repeat(2, 1fr); }
+
 
     .homepage-projects-section .container { padding: 0; }
     .homepage-projects-section .grid-wrap::before{ left: -50px;}

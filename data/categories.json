@@ -1,0 +1,20 @@
+{
+  "list": [
+    {
+      "id": "logo",
+      "name": "Logo"
+    },
+    {
+      "id": "web-design",
+      "name": "Web Design"
+    },
+    {
+      "id": "illustration",
+      "name": "Illustration"
+    },
+    {
+      "id": "animation",
+      "name": "Animation"
+    }
+  ]
+}

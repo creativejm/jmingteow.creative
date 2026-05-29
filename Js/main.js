@@ -1,4 +1,9 @@
-﻿$(function(){
+// 全域深色模式初始化 (Night mode persistence)
+if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+}
+
+$(function(){
     //主要執行js
 })
 function Silder($targer,child_selector,reFn, m_view=3, m_viewDis=3, infinite=false){

@@ -2,9 +2,16 @@
   "featured": false,
   "order": 4,
   "featured_all": false,
-  "cover_image": "https://i.pinimg.com/736x/18/67/ef/1867ef4d095d7a519ab4fc66cc8a9c04.jpg",
+  "cover_image": "../Images/projects/封面主題照.png",
+  "page_blocks": [
+    {
+      "type": "video_block",
+      "video_url": "https://youtu.be/BGfS1IuL6ZE?si=Qzl73BwwZ0C0mq4-"
+    }
+  ],
   "desc_align": "left",
   "subtitle": "",
+  "cover_crop": "",
   "title": "On my way",
   "id": "onmyway",
   "description": "",

@@ -2,7 +2,7 @@
   "featured": false,
   "order": 99,
   "featured_all": false,
-  "cover_image": "https://i.pinimg.com/736x/70/da/20/70da205735611ba108a6d5df33dbdb3a.jpg",
+  "cover_image": "../Images/projects/wixt.png",
   "desc_align": "left",
   "title": "Wixtar",
   "id": "wixtar",

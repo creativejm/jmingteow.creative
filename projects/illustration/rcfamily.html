@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, min-width=640, user-scalable=0, viewport-fit=cover"/>
+  <title>Project — Jming Studio</title>
+  <meta name="description" content="Project detail" />
+  <meta name="robots" content="all" />
+  <meta property="og:site_name" content="Jming Studio" />
+  <meta property="og:type" content="website" />
+
+  <link rel="stylesheet" href="../../css/default.css" />
+  <link rel="stylesheet" href="../../css/ui.css" />
+  <link rel="stylesheet" href="../../css/portfolio.css" />
+  <link rel="stylesheet" href="../../css/mediaqueries.css" />
+
+  <script src="../../Js/rm/jquery-3.4.1.min.js"></script>
+
+  <!-- 告訴 detail.js 這個頁面的作品 ID 和路徑深度 -->
+  <script>
+    var PROJECT_ID  = 'rcfamily';
+    var PATH_PREFIX = '../../';
+  </script>
+
+  <script src="../../Js/rm/realmediaScript.js" defer></script>
+  <script src="../../Js/main.js" defer></script>
+  <script src="../../Js/detail.js" defer></script>
+
+  <script>
+    $(function () {
+      $('header').load('../../include/header.html');
+      $('footer').load('../../include/footer.html');
+    });
+  </script>
+</head>
+<body style="opacity: 0; transition: opacity 0.15s ease-in-out;">
+  <header></header>
+
+  <div class="bodybox detail">
+    <div class="mainContent">
+      <div class="container">
+        <div class="project-detail-wrapper">
+          <h1 id="detailTitle" class="title"></h1>
+          <div class="meta-info" id="detailMeta"></div>
+          <p id="detailDesc"></p>
+          <img id="detailCoverImg" src="" alt="Project Cover" />
+          <div id="detailSections"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer></footer>
+</body>
+</html>

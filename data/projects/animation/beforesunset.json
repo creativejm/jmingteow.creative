@@ -2,11 +2,13 @@
   "client": "hi",
   "featured": false,
   "order": 1,
-  "cover_image": "../Images/projects/lamp.png",
+  "cover_image": "../Images/projects/mom.jpg",
   "subtitle": "",
+  "cover_crop": "cover-bottom",
   "title": "Before Sunset",
   "id": "beforesunset",
   "description": "",
   "year": "2023",
+  "cover_align": "left",
   "category": "animation"
 }

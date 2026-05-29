@@ -3,11 +3,11 @@
   "featured": true,
   "order": 2,
   "featured_all": true,
-  "cover_image": "https://www.petfriendlyhouse.com/wp-content/uploads/2018/11/millennial-dog-breeds-australian-sheherd.webp",
+  "cover_image": "../Images/projects/tea.png",
   "page_blocks": [
     {
-      "type": "video_block",
-      "video_url": "https://www.youtube.com/watch?v=PlGuFXf16HA"
+      "type": "embed_block",
+      "embed_code": "https://9007.realmedia.tw/_Html/default.htm"
     }
   ],
   "desc_align": "center",

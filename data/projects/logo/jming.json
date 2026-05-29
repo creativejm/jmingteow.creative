@@ -1,0 +1,14 @@
+{
+  "show_cover_in_detail": true,
+  "featured": false,
+  "order": 99,
+  "featured_all": false,
+  "cover_image": "../Images/projects/螢幕擷取畫面-2026-05-27-171949.png",
+  "desc_align": "left",
+  "title": "Jm Designer",
+  "id": "jming",
+  "description": "Jm website logo",
+  "year": "2026",
+  "cover_align": "full",
+  "category": "logo"
+}

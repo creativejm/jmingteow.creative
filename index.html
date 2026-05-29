@@ -293,6 +293,11 @@ $(function(){
             lamp.style.cursor = 'pointer';
             lamp.addEventListener('click', function() {
                 document.body.classList.toggle('dark-mode');
+                if (document.body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
             });
         }
 
@@ -722,7 +727,7 @@ $(document).ready(function() {
                 <div class="container">
                     <div class="pageTitle">
                         <h2 class="title">Featured Projects</h2>
-                        <p class="subtitle">Bringing stories to life through Art & Design.</p>
+                        <p class="subtitle">Bringing stories to life through Design & Art.</p>
                     </div>
                     <div class="grid-wrap">
                         <div class="grid" id="homepage-projects-grid">
@@ -730,7 +735,7 @@ $(document).ready(function() {
                         </div>
                     </div>
                     <div class="btnBox">
-                        <a href="projects/index.html" class="btn primary">View All</a>
+                        <a href="projects/index.html" class="btn primary">All Projects</a>
                     </div>
                 </div>
             </div>
@@ -756,6 +761,13 @@ $(document).ready(function() {
                     // 根目錄首頁作品動態加載
                     $.getJSON('data/projects.json?_t=' + new Date().getTime(), function (data) {
                         var projectsList = data.projects || [];
+                        var categoriesConfig = data.categories || [];
+                        var categoryMap = {};
+                        categoriesConfig.forEach(function(c) {
+                            categoryMap[c.id] = c.name;
+                        });
+                        window.categoryMap = categoryMap;
+
                         if (projectsList.length === 0) return;
 
                         var loadedProjects = [];
@@ -825,45 +837,88 @@ $(document).ready(function() {
                                     }
                                 });
 
+                                // Calculate exact seamless loop offset using elements position instead of scrollWidth/2
+                                var cachedHalf = 0;
+                                function updateHalf() {
+                                    var el = grid[0];
+                                    if (!el) return;
+                                    var total = el.children.length;
+                                    var N = total / 2;
+                                    if (N <= 0 || !el.children[N] || !el.children[0]) {
+                                        cachedHalf = el.scrollWidth / 2;
+                                    } else {
+                                        // Exact distance between start of first set and start of second set
+                                        cachedHalf = el.children[N].offsetLeft - el.children[0].offsetLeft;
+                                    }
+                                }
+
+                                // Update half width initially, on resize, and on image load
+                                updateHalf();
+                                $(window).on('resize', updateHalf);
+                                grid.find('img').on('load', updateHalf);
+
                                 // keep scroll position normalized so loop stays seamless
                                 grid.on('scroll', function () {
-                                    var el = this; var half = el.scrollWidth / 2; if (half <= 0) return;
-                                    if (el.scrollLeft >= half) el.scrollLeft = el.scrollLeft - half;
-                                    else if (el.scrollLeft < 0) el.scrollLeft = el.scrollLeft + half;
+                                    var el = this;
+                                    if (cachedHalf <= 0) return;
+                                    if (el.scrollLeft >= cachedHalf) {
+                                        el.scrollLeft = el.scrollLeft - cachedHalf;
+                                    } else if (el.scrollLeft <= 0) {
+                                        el.scrollLeft = cachedHalf;
+                                    }
                                 });
 
-                                // 自動滾動功能（無縫循環，尊重 prefers-reduced-motion）
+                                // 自動滾動功能（無縫循環，尊重 prefers-reduced-motion，使用 requestAnimationFrame 確保流暢）
                                 (function setupAutoScroll() {
                                     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                                         return; // 不啟用自動滾動
                                     }
 
                                     var autoScrollSpeed = parseFloat(cfg.autoScrollSpeed) || 0.6;
-                                    var tickMs = parseInt(cfg.tickMs, 10) || 16;
-                                    var intervalId = null;
+                                    var animationFrameId = null;
                                     var pauseTimeout = null;
                                     var pauseAfterInteraction = parseInt(cfg.pauseAfterInteraction, 10) || 3000;
                                     var $g = grid;
+                                    var lastTimestamp = null;
+
+                                    function tick(timestamp) {
+                                        if (!$g || !$g.length) return;
+                                        if (cachedHalf <= 0) {
+                                            animationFrameId = requestAnimationFrame(tick);
+                                            return;
+                                        }
+
+                                        if (!lastTimestamp) lastTimestamp = timestamp;
+                                        var elapsed = timestamp - lastTimestamp;
+                                        lastTimestamp = timestamp;
+
+                                        // Base speed calculation: autoScrollSpeed pixels per 16ms tick
+                                        var speed = autoScrollSpeed * (elapsed / 16);
+                                        if (speed > 10) speed = autoScrollSpeed; // limit jumps on tab wake
+
+                                        var cur = $g.scrollLeft();
+                                        var next = cur + speed;
+
+                                        if (next >= cachedHalf) {
+                                            $g.scrollLeft(next - cachedHalf);
+                                        } else {
+                                            $g.scrollLeft(next);
+                                        }
+
+                                        animationFrameId = requestAnimationFrame(tick);
+                                    }
 
                                     function start() {
-                                        if (intervalId) return;
-                                        intervalId = setInterval(function () {
-                                            if (!$g || !$g.length) return;
-                                            var el = $g[0];
-                                            var half = el.scrollWidth / 2;
-                                            if (half <= 0) return;
-                                            var cur = $g.scrollLeft();
-                                            var next = cur + autoScrollSpeed;
-                                            if (next >= half) {
-                                                $g.scrollLeft(next - half);
-                                            } else {
-                                                $g.scrollLeft(next);
-                                            }
-                                        }, tickMs);
+                                        if (animationFrameId) return;
+                                        lastTimestamp = null;
+                                        animationFrameId = requestAnimationFrame(tick);
                                     }
 
                                     function stop() {
-                                        if (intervalId) { clearInterval(intervalId); intervalId = null; }
+                                        if (animationFrameId) {
+                                            cancelAnimationFrame(animationFrameId);
+                                            animationFrameId = null;
+                                        }
                                     }
 
                                     function pauseTemp() {
@@ -899,16 +954,19 @@ $(document).ready(function() {
                                 : '';
 
                             var rawCategory = project.category || folderName;
-                            var displayTag = rawCategory
+                            var displayTag = (window.categoryMap && window.categoryMap[rawCategory]) || rawCategory
                                 .split('-')
                                 .map(function (w) { return w.charAt(0).toUpperCase() + w.slice(1); })
                                 .join(' ');
 
+                            var crop = project.cover_crop || '';
+                            var cropClass = crop ? ' crop-' + crop : '';
+
                             var cardHTML =
                                 '<div class="card" data-id="' + projectId + '">' +
-                                    '<a href="projects/' + projectId + '.html">' +
+                                    '<a href="projects/' + folderName + '/' + projectId + '.html">' +
                                         '<div class="thumb">' +
-                                            '<img src="' + fixedCover + '" alt="' + project.title + '" />' +
+                                            '<img src="' + fixedCover + '" alt="' + project.title + '" class="' + cropClass.trim() + '" />' +
                                         '</div>' +
                                         '<div class="info">' +
                                             '<h4 class="title">' + project.title + '</h4>' +
@@ -959,4 +1017,3 @@ $(document).ready(function() {
 
 </body>
 </html>
-
